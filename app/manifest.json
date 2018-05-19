@@ -14,7 +14,7 @@
       "scripts/background.js"
     ]
   },
-  "popup_action": {
+  "browser_action": {
     "default_popup": "scripts/popup.html"
   },
   "content_scripts": [
