@@ -20,6 +20,7 @@
   "content_scripts": [
     {
       "js": [
+        "scripts/listbox.js",
         "scripts/app.js"
       ],
       "css": [
