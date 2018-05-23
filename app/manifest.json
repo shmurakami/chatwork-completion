@@ -6,21 +6,16 @@
   "permissions": [
     "tabs",
     "storage",
-    "http://*/*",
-    "https://*/*"
+    "*://*/*"
   ],
   "background": {
     "scripts": [
       "scripts/background.js"
     ]
   },
-  "browser_action": {
-    "default_popup": "scripts/popup.html"
-  },
   "content_scripts": [
     {
       "js": [
-        "scripts/listbox.js",
         "scripts/app.js"
       ],
       "css": [
