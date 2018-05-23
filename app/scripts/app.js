@@ -1,40 +1,10 @@
-/*
-flow
-とりあえずstyle作らないと話にならん が
-
-ユーザ一覧表示のmodeを管理
-
-_chatTextに @ が入力されたら
-flag on
-shiftだけ判定される場合があって微妙
-
-どのタイミングでflagオフする？
-
-@から区切り文字までを取得して
-それを使って
-incremental search
-↑↓で選べるようにする
-ユーザを選んだらchatworkのスタイルに変換する
-
- */
-
 'use strict'
 
-// const text = require('./text')
-// console.log(text)
+const toButton = document.querySelector('#_to')
+const textarea = document.querySelector('#_chatText')
 
-class Text {
-    constructor(inputTag) {
-        /**
-         * show mention member list
-         * @type {boolean}
-         */
-        this.showMentionMemberList = false;
-
-        /**
-         * @type {HTMLTextAreaElement}
-         */
-        this.textarea = inputTag
+class App {
+    constructor() {
     }
 
     /**
@@ -42,43 +12,39 @@ class Text {
      * @param {KeyboardEvent} event
      */
     keyup(event) {
-        this.showMentionMemberList = this.isMentioning(this.textarea.value, event.key)
+        const key = event.key
+        if (key === '@' && this.showMembers(this.textarea.value, key)) {
+            if (hasMember) {
+                toButton.click()
+                // ignore '@'
+                // @ key is just flag to show menmber list
+                event.preventDefault()
+            }
+        }
     }
 
     /**
-     *
+     * @return {boolean}
+     */
+    hasMember() {
+        return toButton.style.display !== 'none'
+    }
+
+    /**
      * @param {string} text value of textarea
      * @param {string} key
      */
-    isMentioning(text, key) {
-        if (this.showMentionMemberList === false && key === '@') {
-            console.log('start')
+    showMembers(text, key) {
+        // if just first chara or space or breakline before '@'
+        if (text === '@') {
             return true
         }
-
-        if (text === '') {
-            console.log('empty')
-            return false
-        }
-
-        if (key === 'Escape') {
-            console.log('escape')
-            return false
-        }
-    }
-
-    getUsers() {
-        return [
-            {id: '123', cid: 'cw-aoi', name: 'aoi'},
-            {id: '234', cid: 'cw_aomi', name: 'aomi'},
-            {id: '345', cid: 'cw-ito', name: 'ito'},
-        ]
+        return text.substr(-2, 2).match(/\s@/)
     }
 }
 
-const textarea = document.querySelector('#_chatText')
-const text = new Text(textarea)
+const app = new App()
 
 textarea.addEventListener('keyup', (e) => {
-    text.keyup(e)
+    app.keyup(e)
 })
