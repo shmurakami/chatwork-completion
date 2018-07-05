@@ -4,9 +4,9 @@ This (Will) provides new keyboard shortcut and auto completion.
 
 ## How to install
 
-Clone or download this repository and go to chrome://extension on your chrome.
+Download .crx file from [releases](https://github.com/shmurakami/chatwork-completion/releases)
 
-Drag&Drop package/app.crx to your browser.
+Go to chrome://extension on your chrome and drag & drop downloaded .crx file.
 
 ## Usage
 
