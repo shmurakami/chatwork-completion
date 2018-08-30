@@ -1,12 +1,16 @@
 'use strict'
 
+import {elementReady} from './element_ready'
+
+const textareaSelector = '#_chatText'
+
 export class Mention {
     constructor() {
         this.toButton = document.querySelector('#_to')
     }
 
-    keyPress(text) {
-        if (!this.showMembers(text)) {
+    handler(text, event) {
+        if (event.key === '@' && !this.showMembers(text)) {
             return
         }
 
@@ -37,3 +41,12 @@ export class Mention {
     }
 
 }
+
+elementReady(textareaSelector)
+    .then((textarea) => {
+        const mention = new Mention()
+
+        textarea.addEventListener('keydown', (e) => {
+            mention.handler(textarea.value, e)
+        })
+    })
