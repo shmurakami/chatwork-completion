@@ -10,7 +10,7 @@ export class Mention {
     }
 
     handler(text, event) {
-        if (event.key === '@' && !this.showMembers(text)) {
+        if (event.key !== '@' || !this.showMembers(text)) {
             return
         }
 
@@ -46,7 +46,7 @@ elementReady(textareaSelector)
     .then((textarea) => {
         const mention = new Mention()
 
-        textarea.addEventListener('keydown', (e) => {
+        textarea.addEventListener('keypress', (e) => {
             mention.handler(textarea.value, e)
         })
     })
