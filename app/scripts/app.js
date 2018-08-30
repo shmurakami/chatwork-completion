@@ -1,46 +1,24 @@
 'use strict'
 
+import {Mention} from './mention'
+
 const textareaSelector = '#_chatText'
 
 class App {
     constructor() {
-        this.toButton = document.querySelector('#_to')
+        this.mentionApp = new Mention()
     }
 
     /**
-     *
      * @param {string} text
      * @param {KeyboardEvent} event
      */
     keypress(text, event) {
         const key = event.key
-        if (key === '@' && this.showMembers(text, key)) {
-            if (this.hasMember()) {
-                this.toButton.click()
-                // ignore '@'
-                // @ key is just flag to show menmber list
-                event.preventDefault()
-            }
-        }
-    }
 
-    /**
-     * @return {boolean}
-     */
-    hasMember() {
-        return this.toButton.style.display !== 'none'
-    }
-
-    /**
-     * @param {string} text value of textarea
-     * @param {string} key
-     */
-    showMembers(text, key) {
-        // if just first chara or space or breakline before '@'
-        if (text === '') {
-            return true
+        if (key === '@') {
+            this.mentionApp.keyPress(text)
         }
-        return text.substr(-1, 1).match(/\s/)
     }
 }
 
