@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "js": [
-        "scripts/app.js"
+        "dist/index.bundle.js"
       ],
       "css": [
         "styles/app.css"
