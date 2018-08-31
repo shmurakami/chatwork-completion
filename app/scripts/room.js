@@ -110,6 +110,7 @@ export class Room {
         const roomInput = document.createElement('input')
         roomInput.setAttribute('id', roomInputId)
         roomInput.setAttribute('type', 'text')
+        roomInput.setAttribute('placeholder', 'room name...')
         roomInput.classList = ['chatworkCompletionDialogRoomInput']
 
         const roomList = document.createElement('ul')

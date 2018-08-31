@@ -9,20 +9,22 @@
 
   .chatworkCompletionDialog {
     width: 500px;
-    height: 400px;
+    max-height: 400px;
     position: absolute;
     top: 150px;
     right: 0;
-    bottom: 0;
     left: 0;
     margin: auto;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
 
     .chatworkCompletionDialogRoomInput {
       width: 100%;
       height: 40px;
       font-size: 28px;
       line-height: 1em;
-      background-color: white;
+      background-color: transparent;
       border: none;
       outline: none;
       box-shadow: none;
@@ -34,11 +36,13 @@
 
     .chatworkCompletionSuggestRoomListSet {
       width: 100%;
+      max-height: 330px;
       font-size: 28px;
       list-style: none;
-      background-color: white;
+      background-color: transparent;
       padding: 3px;
-      border: solid 1px white;
+      padding-top: 10px;
+      overflow-y: auto;
 
       .chatworkCompletionSuggestRoomList {
         width: 100%;
