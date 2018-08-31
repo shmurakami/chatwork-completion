@@ -26,6 +26,30 @@ let rooms = [
     {id: 3, name: 'sa', hasMention: false, hasUnread: true,},
     {id: 4, name: 'ta', hasMention: true, hasUnread: true,},
     {id: 5, name: 'akasatana', hasMention: false, hasUnread: false,},
+    {id: 6, name: 'r6', hasMention: false, hasUnread: false,},
+    {id: 7, name: 'r7', hasMention: false, hasUnread: false,},
+    {id: 8, name: 'r8', hasMention: false, hasUnread: false,},
+    {id: 9, name: 'r9', hasMention: false, hasUnread: false,},
+    {id: 10, name: 'r10', hasMention: false, hasUnread: false,},
+    {id: 11, name: 'r11', hasMention: false, hasUnread: false,},
+    {id: 12, name: 'r12', hasMention: false, hasUnread: false,},
+    {id: 13, name: 'r13', hasMention: false, hasUnread: false,},
+    {id: 14, name: 'r14', hasMention: false, hasUnread: false,},
+    {id: 15, name: 'r15', hasMention: false, hasUnread: false,},
+    {id: 16, name: 'r16', hasMention: false, hasUnread: false,},
+    {id: 17, name: 'r17', hasMention: false, hasUnread: false,},
+    {id: 18, name: 'r18', hasMention: false, hasUnread: false,},
+    {id: 19, name: 'r19', hasMention: false, hasUnread: false,},
+    {id: 20, name: 'r20', hasMention: false, hasUnread: false,},
+    {id: 21, name: 'r21', hasMention: false, hasUnread: false,},
+    {id: 22, name: 'r22', hasMention: false, hasUnread: false,},
+    {id: 23, name: 'r23', hasMention: false, hasUnread: false,},
+    {id: 24, name: 'r24', hasMention: false, hasUnread: false,},
+    {id: 25, name: 'r25', hasMention: false, hasUnread: false,},
+    {id: 26, name: 'r26', hasMention: false, hasUnread: false,},
+    {id: 27, name: 'r27', hasMention: false, hasUnread: false,},
+    {id: 28, name: 'r28', hasMention: false, hasUnread: false,},
+    {id: 29, name: 'r29', hasMention: false, hasUnread: false,},
 ]
 
 // flag of popup room dialog is added. should be made exactly once
@@ -91,7 +115,8 @@ export class Room {
             return
         }
 
-        const filteredRooms = this.filterRoom(text)
+        // no need so many suggestion
+        const filteredRooms = this.filterRoom(text).slice(0, 19)
         this.renderSuggestRooms(filteredRooms)
     }
 
