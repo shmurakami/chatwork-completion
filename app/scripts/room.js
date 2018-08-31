@@ -4,13 +4,19 @@ import {elementReady} from './element_ready'
 
 const rootSelector = '#root'
 
+const contentSelector = '#_content'
+
 const roomInputId = 'chatworkCompletionRoomInput'
 const roomInputSelector = `#${roomInputId}`
 let roomInputElement
 
+const roomListId = 'chatworkCompletionRoomList'
+const roomListSelector = `#${roomListId}`
+let roomListElement
+
 let rooms = [
     {id: 1, name: 'a', hasMention: false, hasUnread: false,},
-    {id: 2, name: 'ka', hasMention: true, hasUnread: false,},
+    {id: 2, name: 'ka', hasMention: true, hasUnread: true,},
     {id: 3, name: 'sa', hasMention: false, hasUnread: true,},
     {id: 4, name: 'ta', hasMention: true, hasUnread: true,},
     {id: 5, name: 'akasatana', hasMention: false, hasUnread: false,},
@@ -21,7 +27,23 @@ let dialogAdded = false
 
 export class Room {
     constructor() {
-        this.filterValue = ''
+    }
+
+    createSuggestListElements(rooms) {
+        const liLists = []
+        for (let room of rooms) {
+            let li = document.createElement('li')
+            li.classList = ['chatworkCompletionSuggestRoomList']
+            li.textContent = room.name
+            if (room.hasMention) {
+                li.classList.add('chatworkCompletionSuggestRoomListHasMention')
+            }
+            if (room.hasUnread === true) {
+                li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
+            }
+            liLists.push(li)
+        }
+        return liLists
     }
 
     filterRoom(roomName) {
@@ -29,17 +51,31 @@ export class Room {
         const filtered = rooms.filter((r) => {
             return r.name.indexOf(roomName) !== -1
         })
-        // sort
-        // mention is most prior
-        // unread is next
-        // rest
-        
+
+        const pusher = (room) => {
+            filteredRooms.push(room)
+        }
+
+        filtered.filter(room => {
+            return room.hasMention === true
+        }).forEach(pusher)
+
+        filtered.filter(room => {
+            return room.hasMention === false
+                && room.hasUnread === true
+        }).forEach(pusher)
+
+        filtered.filter(room => {
+            return room.hasMention === false
+                && room.hasUnread === false
+        }).forEach(pusher)
+
+        return filteredRooms
     }
 
     handler() {
         // observe this element
         const text = roomInputElement.value
-        console.log(text)
 
         const filteredRooms = this.filterRoom(text)
         this.renderSuggestRooms(filteredRooms)
@@ -49,12 +85,10 @@ export class Room {
         return e.key === 'i' && e.metaKey === true
     }
 
-    filterRoom(value) {
-        return []
-    }
-
     renderSuggestRooms(rooms) {
-        console.log(rooms)
+        this.createSuggestListElements(rooms).forEach((element) => {
+            roomListElement.appendChild(element)
+        })
     }
 
     async addDialog() {
@@ -67,31 +101,41 @@ export class Room {
 
     makeDialog() {
         const background = document.createElement('div')
-        background.style.cssText = 'width: 100%; height: 100%; position: fixed; top:0; left: 0; background-color: rgba(0,0,0,0.4); z-index: 1000;'
+        background.setAttribute('id', 'chatworkCompletionDialogBackground')
+        background.classList = ['chatworkCompletionDialogBackground'];
+        // background.style.cssText = 'width: 100%; height: 100%; position: fixed; top:0; left: 0; background-color: rgba(0,0,0,0.4); z-index: 1000;'
         const dialog = document.createElement('div')
-        dialog.style.cssText = 'width: 500px; height:400px; position: absolute; top:150px;right:0;bottom:0;left:0; margin: auto;'
+        dialog.classList = ['chatworkCompletionDialog']
 
         const roomInput = document.createElement('input')
         roomInput.setAttribute('id', roomInputId)
         roomInput.setAttribute('type', 'text')
-        roomInput.style.cssText = 'width:100%; height:40px; font-size:28px; line-height:1em; background-color:#ffffff; border:1px solid #ffffff; border-radius:10px;'
+        roomInput.classList = ['chatworkCompletionDialogRoomInput']
+
+        const roomList = document.createElement('ul')
+        roomList.setAttribute('id', roomListId)
+        roomList.classList = ['chatworkCompletionSuggestRoomListSet']
 
         dialog.appendChild(roomInput)
+        dialog.appendChild(roomList)
+
         background.appendChild(dialog)
         document.querySelector(rootSelector).appendChild(background)
     }
 
 }
 
-elementReady(rootSelector)
-    .then((root) => {
+elementReady(contentSelector)
+    .then(() => {
+        const root = document.querySelector(rootSelector)
         const room = new Room
         room.addDialog()
 
         roomInputElement = document.querySelector(roomInputSelector)
+        roomListElement = document.querySelector(roomListSelector)
 
         roomInputElement.addEventListener('keyup', (e) => {
-            room.filterRoom(e.target.value)
+            room.handler()
         })
 
         root.addEventListener('keypress', (e) => {
