@@ -100,6 +100,7 @@ export class Room {
     }
 
     renderSuggestRooms(rooms) {
+        this.clearSuggestRooms(roomListElement)
         this.createRoomListElements(rooms).forEach((element) => {
             roomListElement.appendChild(element)
         })
@@ -167,9 +168,13 @@ export class Room {
 
         if (rendered === true) {
             roomInputElement.value = ''
-            while (roomListElement.firstChild) {
-                roomListElement.firstChild.remove()
-            }
+            this.clearSuggestRooms(roomListElement)
+        }
+    }
+
+    clearSuggestRooms(listElement) {
+        while (listElement.firstChild) {
+            listElement.firstChild.remove()
         }
     }
 
