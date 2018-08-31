@@ -6,6 +6,10 @@ const rootSelector = '#root'
 
 const contentSelector = '#_content'
 
+const backgroundId = 'chatworkCompletionDialogBackground'
+const backgroundSelector = `#${backgroundId }`
+let backgroundElement
+
 const roomInputId = 'chatworkCompletionRoomInput'
 const roomInputSelector = `#${roomInputId}`
 let roomInputElement
@@ -76,6 +80,9 @@ export class Room {
     handler() {
         // observe this element
         const text = roomInputElement.value
+        if (text === '') {
+            return
+        }
 
         const filteredRooms = this.filterRoom(text)
         this.renderSuggestRooms(filteredRooms)
@@ -101,7 +108,7 @@ export class Room {
 
     makeDialog() {
         const background = document.createElement('div')
-        background.setAttribute('id', 'chatworkCompletionDialogBackground')
+        background.setAttribute('id', backgroundId)
         background.classList = ['chatworkCompletionDialogBackground'];
         // background.style.cssText = 'width: 100%; height: 100%; position: fixed; top:0; left: 0; background-color: rgba(0,0,0,0.4); z-index: 1000;'
         const dialog = document.createElement('div')
@@ -124,6 +131,15 @@ export class Room {
         document.querySelector(rootSelector).appendChild(background)
     }
 
+    show() {
+        const className = 'chatworkCompletionDialogBackground__active'
+        if (backgroundElement.classList.contains(className)) {
+            return
+        }
+        backgroundElement.classList.add(className)
+        roomInputElement.focus()
+    }
+
 }
 
 elementReady(contentSelector)
@@ -132,6 +148,7 @@ elementReady(contentSelector)
         const room = new Room
         room.addDialog()
 
+        backgroundElement = document.querySelector(backgroundSelector)
         roomInputElement = document.querySelector(roomInputSelector)
         roomListElement = document.querySelector(roomListSelector)
 
@@ -141,7 +158,7 @@ elementReady(contentSelector)
 
         root.addEventListener('keypress', (e) => {
             if (room.trigger(e)) {
-                room.handler()
+                room.show()
             }
         })
     })

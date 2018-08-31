@@ -6,6 +6,11 @@
   left: 0;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+
+  &.chatworkCompletionDialogBackground__active {
+    display: block;
+  }
 
   .chatworkCompletionDialog {
     width: 500px;
