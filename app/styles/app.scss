@@ -40,19 +40,20 @@
     }
 
     .chatworkCompletionSuggestRoomListSet {
-      width: 100%;
+      width: calc(100% - 6px);
       max-height: 330px;
       font-size: 28px;
       list-style: none;
       background-color: transparent;
-      padding: 3px;
-      padding-top: 10px;
       overflow-y: auto;
+      overflow-x: hidden;
 
       .chatworkCompletionSuggestRoomList {
         width: 100%;
         line-height: 1em;
         font-size: 28px;
+        white-space: nowrap;
+        padding: 3px;
 
         &.chatworkCompletionSuggestRoomListHasMention {
           color: blue;

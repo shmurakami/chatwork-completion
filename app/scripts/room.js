@@ -36,25 +36,29 @@ export class Room {
         this.clear()
     }
 
-    createSuggestListElements(rooms) {
-        const liLists = []
+    createRoomListElements(rooms) {
+        const lists = []
         for (let room of rooms) {
-            let li = document.createElement('li')
-            li.classList = ['chatworkCompletionSuggestRoomList']
-            li.textContent = room.name
-            if (room.hasMention) {
-                li.classList.add('chatworkCompletionSuggestRoomListHasMention')
-            }
-            if (room.hasUnread === true) {
-                li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
-            }
-            liLists.push(li)
+            lists.push(this.createListItemElement(room))
         }
-        return liLists
+        return lists
+    }
+
+    createListItemElement(room) {
+        const li = document.createElement('li')
+        li.classList = ['chatworkCompletionSuggestRoomList']
+        li.textContent = room.name
+        if (room.hasMention === true) {
+            li.classList.add('chatworkCompletionSuggestRoomListHasMention')
+        }
+        if (room.hasUnread === true) {
+            li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
+        }
+        return li
     }
 
     filterRoom(roomName) {
-        let filteredRooms = [];
+        const filteredRooms = [];
         const filtered = rooms.filter((r) => {
             return r.name.indexOf(roomName) !== -1
         })
@@ -80,10 +84,10 @@ export class Room {
         return filteredRooms
     }
 
-    handler() {
-        // observe this element
+    suggestRooms() {
         const text = roomInputElement.value
         if (text === '') {
+            // or head 5 rooms
             return
         }
 
@@ -96,7 +100,7 @@ export class Room {
     }
 
     renderSuggestRooms(rooms) {
-        this.createSuggestListElements(rooms).forEach((element) => {
+        this.createRoomListElements(rooms).forEach((element) => {
             roomListElement.appendChild(element)
         })
     }
@@ -113,7 +117,7 @@ export class Room {
         const background = document.createElement('div')
         background.setAttribute('id', backgroundId)
         background.classList = ['chatworkCompletionDialogBackground'];
-        // background.style.cssText = 'width: 100%; height: 100%; position: fixed; top:0; left: 0; background-color: rgba(0,0,0,0.4); z-index: 1000;'
+
         const dialog = document.createElement('div')
         dialog.classList = ['chatworkCompletionDialog']
 
@@ -191,7 +195,7 @@ elementReady(contentSelector)
         })
 
         roomInputElement.addEventListener('keyup', (e) => {
-            room.handler()
+            room.suggestRooms()
         })
 
         root.addEventListener('keypress', (e) => {
