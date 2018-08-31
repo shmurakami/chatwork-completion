@@ -6,6 +6,8 @@ const rootSelector = '#root'
 
 const contentSelector = '#_content'
 
+const backgroundActiveClass = 'chatworkCompletionDialogBackground__active'
+
 const backgroundId = 'chatworkCompletionDialogBackground'
 const backgroundSelector = `#${backgroundId }`
 let backgroundElement
@@ -27,10 +29,11 @@ let rooms = [
 ]
 
 // flag of popup room dialog is added. should be made exactly once
-let dialogAdded = false
+let rendered = false
 
 export class Room {
     constructor() {
+        this.clear()
     }
 
     createSuggestListElements(rooms) {
@@ -99,11 +102,11 @@ export class Room {
     }
 
     async addDialog() {
-        if (dialogAdded) {
+        if (rendered === true) {
             return
         }
         await this.makeDialog()
-        dialogAdded = true
+        rendered = true
     }
 
     makeDialog() {
@@ -118,6 +121,7 @@ export class Room {
         roomInput.setAttribute('id', roomInputId)
         roomInput.setAttribute('type', 'text')
         roomInput.setAttribute('placeholder', 'room name...')
+        roomInput.setAttribute('autocomplete', 'off')
         roomInput.classList = ['chatworkCompletionDialogRoomInput']
 
         const roomList = document.createElement('ul')
@@ -132,12 +136,37 @@ export class Room {
     }
 
     show() {
-        const className = 'chatworkCompletionDialogBackground__active'
-        if (backgroundElement.classList.contains(className)) {
+        if (backgroundElement.classList.contains(backgroundActiveClass)) {
             return
         }
-        backgroundElement.classList.add(className)
+        backgroundElement.classList.add(backgroundActiveClass)
         roomInputElement.focus()
+    }
+
+    hide() {
+        backgroundElement.classList.remove(backgroundActiveClass)
+        this.clear()
+    }
+
+    syncRooms() {
+        rooms = [
+            {id: 1, name: 'a', hasMention: false, hasUnread: false,},
+            {id: 2, name: 'ka', hasMention: true, hasUnread: true,},
+            {id: 3, name: 'sa', hasMention: false, hasUnread: true,},
+            {id: 4, name: 'ta', hasMention: true, hasUnread: true,},
+            {id: 5, name: 'akasatana', hasMention: false, hasUnread: false,},
+        ]
+    }
+
+    clear() {
+        this.filteredRooms = []
+
+        if (rendered === true) {
+            roomInputElement.value = ''
+            while (roomListElement.firstChild) {
+                roomListElement.firstChild.remove()
+            }
+        }
     }
 
 }
@@ -151,6 +180,15 @@ elementReady(contentSelector)
         backgroundElement = document.querySelector(backgroundSelector)
         roomInputElement = document.querySelector(roomInputSelector)
         roomListElement = document.querySelector(roomListSelector)
+
+        backgroundElement.addEventListener('click', () => {
+            room.hide()
+        })
+
+        roomInputElement.addEventListener('click', (e) => {
+            // don't hide dialog if clicked input element
+            e.stopPropagation()
+        })
 
         roomInputElement.addEventListener('keyup', (e) => {
             room.handler()
