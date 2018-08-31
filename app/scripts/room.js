@@ -78,7 +78,17 @@ export class Room {
         if (room.hasUnread === true) {
             li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
         }
+
+        li.addEventListener('click', (e) => {
+            this.selectRoom(room)
+        })
+
         return li
+    }
+
+    selectRoom(room) {
+        // TODO move to room
+        console.log(room)
     }
 
     filterRoom(roomName) {
@@ -179,6 +189,7 @@ export class Room {
     }
 
     syncRooms() {
+        // TODO sync room
         rooms = [
             {id: 1, name: 'a', hasMention: false, hasUnread: false,},
             {id: 2, name: 'ka', hasMention: true, hasUnread: true,},
