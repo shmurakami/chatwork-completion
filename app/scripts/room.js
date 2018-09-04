@@ -58,14 +58,17 @@ export class Room {
     }
 
     selectRoom(room) {
-        // TODO move to room
-        console.log(room)
+        const selector = `li.roomListItem[data-rid="${room.id}"]`
+        const li = document.querySelector(selector)
+        if (li) {
+            li.click()
+        }
     }
 
     filterRoom(roomName) {
         const filteredRooms = [];
         const filtered = rooms.filter((r) => {
-            return r.name.indexOf(roomName) !== -1
+            return r.name.toLowerCase().indexOf(roomName.toLowerCase()) !== -1
         })
 
         const pusher = (room) => {
@@ -162,8 +165,6 @@ export class Room {
                 hasUnread: hasMention || !!(li.querySelector('li._unreadBadge')),
             })
         })
-
-        return rooms
     }
 
     clear() {
@@ -206,6 +207,7 @@ elementReady(contentSelector)
 
         root.addEventListener('keypress', (e) => {
             if (room.trigger(e)) {
+                room.syncRooms()
                 room.show()
             }
         })
