@@ -20,37 +20,7 @@ const roomListId = 'chatworkCompletionRoomList'
 const roomListSelector = `#${roomListId}`
 let roomListElement
 
-let rooms = [
-    {id: 1, name: 'a', hasMention: false, hasUnread: false,},
-    {id: 2, name: 'ka', hasMention: true, hasUnread: true,},
-    {id: 3, name: 'sa', hasMention: false, hasUnread: true,},
-    {id: 4, name: 'ta', hasMention: true, hasUnread: true,},
-    {id: 5, name: 'akasatana', hasMention: false, hasUnread: false,},
-    {id: 6, name: 'r6', hasMention: false, hasUnread: false,},
-    {id: 7, name: 'r7', hasMention: false, hasUnread: false,},
-    {id: 8, name: 'r8', hasMention: false, hasUnread: false,},
-    {id: 9, name: 'r9', hasMention: false, hasUnread: false,},
-    {id: 10, name: 'r10', hasMention: false, hasUnread: false,},
-    {id: 11, name: 'r11', hasMention: false, hasUnread: false,},
-    {id: 12, name: 'r12', hasMention: false, hasUnread: false,},
-    {id: 13, name: 'r13', hasMention: false, hasUnread: false,},
-    {id: 14, name: 'r14', hasMention: false, hasUnread: false,},
-    {id: 15, name: 'r15', hasMention: false, hasUnread: false,},
-    {id: 16, name: 'r16', hasMention: false, hasUnread: false,},
-    {id: 17, name: 'r17', hasMention: false, hasUnread: false,},
-    {id: 18, name: 'r18', hasMention: false, hasUnread: false,},
-    {id: 19, name: 'r19', hasMention: false, hasUnread: false,},
-    {id: 20, name: 'r20', hasMention: false, hasUnread: false,},
-    {id: 21, name: 'r21', hasMention: false, hasUnread: false,},
-    {id: 22, name: 'r22', hasMention: false, hasUnread: false,},
-    {id: 23, name: 'r23', hasMention: false, hasUnread: false,},
-    {id: 24, name: 'r24', hasMention: false, hasUnread: false,},
-    {id: 25, name: 'r25', hasMention: false, hasUnread: false,},
-    {id: 26, name: 'r26', hasMention: false, hasUnread: false,},
-    {id: 27, name: 'r27', hasMention: false, hasUnread: false,},
-    {id: 28, name: 'r28', hasMention: false, hasUnread: false,},
-    {id: 29, name: 'r29', hasMention: false, hasUnread: false,},
-]
+let rooms = []
 
 // flag of popup room dialog is added. should be made exactly once
 let rendered = false
@@ -58,6 +28,7 @@ let rendered = false
 export class Room {
     constructor() {
         this.clear()
+        this.syncRooms()
     }
 
     createRoomListElements(rooms) {
@@ -72,11 +43,11 @@ export class Room {
         const li = document.createElement('li')
         li.classList = ['chatworkCompletionSuggestRoomList']
         li.textContent = room.name
-        if (room.hasMention === true) {
-            li.classList.add('chatworkCompletionSuggestRoomListHasMention')
-        }
         if (room.hasUnread === true) {
             li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
+        }
+        if (room.hasMention === true) {
+            li.classList.add('chatworkCompletionSuggestRoomListHasMention')
         }
 
         li.addEventListener('click', (e) => {
@@ -100,33 +71,25 @@ export class Room {
         const pusher = (room) => {
             filteredRooms.push(room)
         }
+        let filters = [
+            (room) => {return room.hasMention === true},
+            (room) => {return room.hasMention === false && room.hasUnread === true},
+            (room) => {return room.hasMention === false && room.hasUnread === false}
+        ]
 
-        filtered.filter(room => {
-            return room.hasMention === true
-        }).forEach(pusher)
-
-        filtered.filter(room => {
-            return room.hasMention === false
-                && room.hasUnread === true
-        }).forEach(pusher)
-
-        filtered.filter(room => {
-            return room.hasMention === false
-                && room.hasUnread === false
-        }).forEach(pusher)
+        filters.forEach(f => {
+            filtered.filter(f).forEach(pusher)
+            if (filteredRooms.length >= 20) {
+                return filteredRooms
+            }
+        })
 
         return filteredRooms
     }
 
     suggestRooms() {
         const text = roomInputElement.value
-        if (text === '') {
-            // or head 5 rooms
-            return
-        }
-
-        // no need so many suggestion
-        const filteredRooms = this.filterRoom(text).slice(0, 19)
+        const filteredRooms = this.filterRoom(text)
         this.renderSuggestRooms(filteredRooms)
     }
 
@@ -189,19 +152,21 @@ export class Room {
     }
 
     syncRooms() {
-        // TODO sync room
-        rooms = [
-            {id: 1, name: 'a', hasMention: false, hasUnread: false,},
-            {id: 2, name: 'ka', hasMention: true, hasUnread: true,},
-            {id: 3, name: 'sa', hasMention: false, hasUnread: true,},
-            {id: 4, name: 'ta', hasMention: true, hasUnread: true,},
-            {id: 5, name: 'akasatana', hasMention: false, hasUnread: false,},
-        ]
+        rooms = []
+        document.querySelectorAll('.roomListItem').forEach(li => {
+            let hasMention = !!(li.querySelector('li.roomListBadges__unreadBadge--hasMemtion'))
+            rooms.push({
+                id: li.getAttribute('data-rid'),
+                name: li.querySelector('.roomListItem__roomName').textContent,
+                hasMention: hasMention,
+                hasUnread: hasMention || !!(li.querySelector('li._unreadBadge')),
+            })
+        })
+
+        return rooms
     }
 
     clear() {
-        this.filteredRooms = []
-
         if (rendered === true) {
             roomInputElement.value = ''
             this.clearSuggestRooms(roomListElement)

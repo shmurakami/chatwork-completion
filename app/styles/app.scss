@@ -33,6 +33,7 @@
       border: none;
       outline: none;
       box-shadow: none;
+      margin-bottom: 10px;
 
       &:focus {
         outline: none;
@@ -42,7 +43,7 @@
     .chatworkCompletionSuggestRoomListSet {
       width: calc(100% - 6px);
       max-height: 330px;
-      font-size: 28px;
+      font-size: 24px;
       list-style: none;
       background-color: transparent;
       overflow-y: auto;
@@ -51,16 +52,19 @@
       .chatworkCompletionSuggestRoomList {
         width: 100%;
         line-height: 1em;
-        font-size: 28px;
+        font-size: 24px;
         white-space: nowrap;
         padding: 3px;
+        margin-bottom: 5px;
+        color: #888;
+        cursor: pointer;
 
         &.chatworkCompletionSuggestRoomListHasMention {
-          color: blue;
+          color: blue !important;
         }
 
         &.chatworkCompletionSuggestRoomListHasUnread {
-          font-weight: bold;
+          color: black;
         }
 
         &:hover {
