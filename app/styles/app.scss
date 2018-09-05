@@ -43,7 +43,7 @@
     .chatworkCompletionSuggestRoomListSet {
       width: calc(100% - 6px);
       max-height: 330px;
-      font-size: 24px;
+      font-size: 20px;
       list-style: none;
       background-color: transparent;
       overflow-y: auto;
@@ -52,9 +52,8 @@
       .chatworkCompletionSuggestRoomList {
         width: 100%;
         line-height: 1em;
-        font-size: 24px;
         white-space: nowrap;
-        padding: 3px;
+        padding: 5px 3px;
         margin-bottom: 5px;
         color: #888;
         cursor: pointer;
