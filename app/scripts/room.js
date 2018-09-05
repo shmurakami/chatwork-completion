@@ -1,6 +1,7 @@
 'use strict'
 
 import {elementReady} from './element_ready'
+import {aria, Listbox} from './listbox'
 
 const rootSelector = '#root'
 
@@ -33,14 +34,20 @@ export class Room {
 
     createRoomListElements(rooms) {
         const lists = []
+        let index = 0;
         for (let room of rooms) {
-            lists.push(this.createListItemElement(room))
+            lists.push(this.createListItemElement(room, index))
+            index++
         }
         return lists
     }
 
-    createListItemElement(room) {
+    createListItemElement(room, index) {
         const li = document.createElement('li')
+        li.setAttribute('role', 'option')
+        li.setAttribute('tabindex', -1)
+        li.setAttribute('data-type', 'member')
+        li.setAttribute('data-index', index)
         li.classList = ['chatworkCompletionSuggestRoomList']
         li.textContent = room.name
         if (room.hasUnread === true) {
@@ -105,6 +112,7 @@ export class Room {
         this.createRoomListElements(rooms).forEach((element) => {
             roomListElement.appendChild(element)
         })
+        new aria.Listbox(document.querySelector(roomListSelector))
     }
 
     async addDialog() {
@@ -116,6 +124,7 @@ export class Room {
     }
 
     makeDialog() {
+        // TODO rewrite by template tag
         const background = document.createElement('div')
         background.setAttribute('id', backgroundId)
         background.classList = ['chatworkCompletionDialogBackground'];
@@ -132,6 +141,7 @@ export class Room {
 
         const roomList = document.createElement('ul')
         roomList.setAttribute('id', roomListId)
+        roomList.setAttribute('role', 'listbox')
         roomList.classList = ['chatworkCompletionSuggestRoomListSet']
 
         dialog.appendChild(roomInput)
@@ -147,11 +157,6 @@ export class Room {
         }
         backgroundElement.classList.add(backgroundActiveClass)
         roomInputElement.focus()
-    }
-
-    hide() {
-        backgroundElement.classList.remove(backgroundActiveClass)
-        this.clear()
     }
 
     syncRooms() {
@@ -180,6 +185,11 @@ export class Room {
         }
     }
 
+    dismiss() {
+        backgroundElement.classList.remove(backgroundActiveClass)
+        this.clear()
+    }
+
 }
 
 elementReady(contentSelector)
@@ -193,12 +203,19 @@ elementReady(contentSelector)
         roomListElement = document.querySelector(roomListSelector)
 
         backgroundElement.addEventListener('click', () => {
-            room.hide()
+            room.dismiss()
         })
 
         roomInputElement.addEventListener('click', (e) => {
             // don't hide dialog if clicked input element
             e.stopPropagation()
+        })
+
+        roomInputElement.addEventListener('keydown', (e) => {
+            // ESC
+            if (e.keyCode === 27) {
+                room.dismiss(e)
+            }
         })
 
         roomInputElement.addEventListener('keyup', (e) => {
