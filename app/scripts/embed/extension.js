@@ -5,5 +5,5 @@
  */
 
 (function () {
-    console.log('embedded')
+    // lifeCycleEvent.on('loadRoom', s => {console.log(s)})
 })();
