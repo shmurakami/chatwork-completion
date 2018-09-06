@@ -5,14 +5,15 @@
 /**
  * @namespace aria
  */
-const aria = aria || {};
 
-aria.KeyCode = {
-    RETURN: 13,
-    ESC: 27,
-    UP: 38,
-    DOWN: 40,
-};
+const aria = {
+    KeyCode: {
+        RETURN: 13,
+        ESC: 27,
+        UP: 38,
+        DOWN: 40,
+    },
+}
 
 class Listbox {
     constructor(listboxNode) {

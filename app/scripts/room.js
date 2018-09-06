@@ -1,7 +1,7 @@
 'use strict'
 
 import {elementReady} from './element_ready'
-import {aria, Listbox} from './listbox'
+import {Listbox} from './listbox'
 
 const rootSelector = '#root'
 
@@ -112,7 +112,7 @@ export class Room {
         this.createRoomListElements(rooms).forEach((element) => {
             roomListElement.appendChild(element)
         })
-        new aria.Listbox(document.querySelector(roomListSelector))
+        new Listbox(document.querySelector(roomListSelector))
     }
 
     async addDialog() {

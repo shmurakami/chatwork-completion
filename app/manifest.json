@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "chatwork input completion",
   "permissions": [
-    "tabs",
+    "activeTab",
     "storage",
     "*://*/*"
   ],
@@ -16,7 +16,8 @@
   "content_scripts": [
     {
       "js": [
-        "dist/index.bundle.js"
+        "dist/index.bundle.js",
+        "scripts/embed/extension.js"
       ],
       "css": [
         "styles/app.css"
