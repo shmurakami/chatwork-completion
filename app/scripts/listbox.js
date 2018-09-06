@@ -6,97 +6,78 @@
  * @namespace aria
  */
 
-const aria = {
-    KeyCode: {
-        RETURN: 13,
-        ESC: 27,
-        UP: 38,
-        DOWN: 40,
-    },
+const keyCode = {
+    // RETURN: 'Enter', // can't handle enter event from listbox now
+    UP: 'ArrowUp',
+    DOWN: 'ArrowDown',
 }
 
 class Listbox {
-    constructor(listboxNode) {
-        this.listboxNode = listboxNode
+    constructor(containerNode, listBoxNode) {
+        // index for focused row
+        this.position = 0
+
+        this.containerNode = containerNode
+        this.listBoxNode = listBoxNode
         this.registerEvent()
     }
 
     registerEvent() {
-        this.listboxNode.addEventListener('keydown', this.checkKeyPress.bind(this));
+        this.containerNode.addEventListener('keydown', this.checkKeyPress.bind(this));
     }
 
     focusItem(element) {
-        // set/remove aria-focus? attribute
-        // add style for focus same as hover
-        // need list by order
-        // down/up/enter
+        const focusClassName = 'chatworkCompletionSuggestRoomListFocus'
+        const focusedElement = this.listBoxNode.querySelector(`.${focusClassName}`)
+        if (focusedElement) {
+            focusedElement.classList.remove(focusClassName)
+        }
+        element.classList.add(focusClassName)
 
-        this.defocusItem(document.getElementById(this.activeDescendant));
-        aria.Utils.addClass(element, 'focused');
-        this.listboxNode.setAttribute('aria-activedescendant', element.id);
-        this.activeDescendant = element.id;
+        if (this.listBoxNode.scrollHeight > this.listBoxNode.clientHeight) {
+            const scrollBottom = this.listBoxNode.clientHeight + this.listBoxNode.scrollTop
+            const elementBottom = element.offsetTop + element.offsetHeight
 
-        if (this.listboxNode.scrollHeight > this.listboxNode.clientHeight) {
-            var scrollBottom = this.listboxNode.clientHeight + this.listboxNode.scrollTop;
-            var elementBottom = element.offsetTop + element.offsetHeight;
             if (elementBottom > scrollBottom) {
-                this.listboxNode.scrollTop = elementBottom - this.listboxNode.clientHeight;
-            }
-            else if (element.offsetTop < this.listboxNode.scrollTop) {
-                this.listboxNode.scrollTop = element.offsetTop;
+                this.listBoxNode.scrollTop = elementBottom - this.listBoxNode.clientHeight
+
+            } else if (element.offsetTop < this.listBoxNode.scrollTop) {
+                this.listBoxNode.scrollTop = element.offsetTop
             }
         }
     }
 
     checkKeyPress(event) {
-        // which?
-        const key = event.which || event.keyCode
-        let nextItem = document.querySelector('');
-        if (!nextItem) {
-            return;
+        const key = event.code
+
+        let currentItem = this.listBoxNode.children[this.position]
+        if (!currentItem) {
+            this.position = 0
+            currentItem = this.listBoxNode.children[this.position]
+            if (!currentItem) {
+                return
+            }
         }
 
-        switch (key) {
-            case aria.KeyCode.UP:
-            case aria.KeyCode.DOWN:
-                event.preventDefault();
+        if (key === keyCode.UP || key === keyCode.DOWN) {
+            event.preventDefault();
 
-                if (key === aria.KeyCode.UP) {
-                    nextItem = nextItem.previousElementSibling;
+            if (key === keyCode.UP) {
+                if (this.position === 0) {
+                    return
                 }
-                else {
-                    nextItem = nextItem.nextElementSibling;
-                }
+                this.position -= 1
 
-                if (nextItem) {
-                    this.focusItem(nextItem);
+            } else {
+                if (this.listBoxNode.children.length <= this.position + 1) {
+                    return
                 }
-
-                break;
-            case aria.KeyCode.RETURN:
-                event.preventDefault();
-
-                let nextUnselected = nextItem.nextElementSibling;
-                while (nextUnselected) {
-                    if (nextUnselected.getAttribute('aria-selected') !== 'true') {
-                        break;
-                    }
-                    nextUnselected = nextUnselected.nextElementSibling;
-                }
-                if (!nextUnselected) {
-                    nextUnselected = nextItem.previousElementSibling;
-                    while (nextUnselected) {
-                        if (nextUnselected.getAttribute('aria-selected') !== 'true') {
-                            break;
-                        }
-                        nextUnselected = nextUnselected.previousElementSibling;
-                    }
-                }
-
-                if (nextUnselected) {
-                    this.focusItem(nextUnselected);
-                }
-                break;
+                this.position += 1
+            }
+            const element = this.listBoxNode.children[this.position]
+            if (element) {
+                this.focusItem(element)
+            }
         }
     }
 

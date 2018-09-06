@@ -47,8 +47,11 @@ export class Room {
         li.setAttribute('role', 'option')
         li.setAttribute('tabindex', -1)
         li.setAttribute('data-type', 'member')
-        li.setAttribute('data-index', index)
-        li.classList = ['chatworkCompletionSuggestRoomList']
+        li.setAttribute('data-rid', room.id)
+        if (index === 0) {
+            li.classList.add('chatworkCompletionSuggestRoomListFocus')
+        }
+        li.classList.add('chatworkCompletionSuggestRoomList')
         li.textContent = room.name
         if (room.hasUnread === true) {
             li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
@@ -58,18 +61,28 @@ export class Room {
         }
 
         li.addEventListener('click', (e) => {
-            this.selectRoom(room)
+            this.selectRoom(room.id)
         })
 
         return li
     }
 
-    selectRoom(room) {
-        const selector = `li.roomListItem[data-rid="${room.id}"]`
+    selectRoom(roomId) {
+        const selector = `li.roomListItem[data-rid="${roomId}"]`
         const li = document.querySelector(selector)
         if (li) {
             li.click()
         }
+        this.dismiss()
+    }
+
+    selectRoomList() {
+        const focusedElement = roomListElement.querySelector('.chatworkCompletionSuggestRoomListFocus')
+        if (!focusedElement) {
+            return
+        }
+        const roomId = focusedElement.getAttribute('data-rid')
+        this.selectRoom(roomId)
     }
 
     filterRoom(roomName) {
@@ -81,12 +94,11 @@ export class Room {
         const pusher = (room) => {
             filteredRooms.push(room)
         }
+        // show only mention and unread in default
         let filters = [
             (room) => {return room.hasMention === true},
             (room) => {return room.hasMention === false && room.hasUnread === true},
-            (room) => {return room.hasMention === false && room.hasUnread === false}
         ]
-
         filters.forEach(f => {
             filtered.filter(f).forEach(pusher)
             if (filteredRooms.length >= 20) {
@@ -94,7 +106,36 @@ export class Room {
             }
         })
 
+        if (filteredRooms.length > 0) {
+            return filteredRooms
+        }
+
+        filtered
+            .filter((room) => {
+                return room.hasMention === false && room.hasUnread === false
+            })
+            .slice(0, 20)
+            .forEach(pusher)
         return filteredRooms
+    }
+
+    handleInput(event) {
+        const code = event.code
+        if (code === 'Escape') {
+            this.dismiss(event)
+            return
+        }
+
+        if (code === 'Enter') {
+            this.selectRoomList()
+        }
+
+        if (code === 'ArrowUp' || code === 'ArrowDown') {
+            // don't handle
+            return
+        }
+
+        this.suggestRooms()
     }
 
     suggestRooms() {
@@ -112,7 +153,6 @@ export class Room {
         this.createRoomListElements(rooms).forEach((element) => {
             roomListElement.appendChild(element)
         })
-        new Listbox(document.querySelector(roomListSelector))
     }
 
     async addDialog() {
@@ -157,6 +197,8 @@ export class Room {
         }
         backgroundElement.classList.add(backgroundActiveClass)
         roomInputElement.focus()
+
+        new Listbox(backgroundElement, roomListElement)
     }
 
     syncRooms() {
@@ -206,20 +248,19 @@ elementReady(contentSelector)
             room.dismiss()
         })
 
+        backgroundElement.addEventListener('keydown', (e) => {
+            if (e.code === 'Escape') {
+                room.dismiss()
+            }
+        })
+
         roomInputElement.addEventListener('click', (e) => {
             // don't hide dialog if clicked input element
             e.stopPropagation()
         })
 
-        roomInputElement.addEventListener('keydown', (e) => {
-            // ESC
-            if (e.keyCode === 27) {
-                room.dismiss(e)
-            }
-        })
-
         roomInputElement.addEventListener('keyup', (e) => {
-            room.suggestRooms()
+            room.handleInput(e)
         })
 
         root.addEventListener('keypress', (e) => {

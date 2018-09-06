@@ -59,16 +59,24 @@
         cursor: pointer;
 
         &.chatworkCompletionSuggestRoomListHasMention {
-          color: blue !important;
+          font-weight: bold;
         }
 
         &.chatworkCompletionSuggestRoomListHasUnread {
           color: black;
         }
 
-        &:hover {
-          color: white;
+        @mixin focusRoomList {
+          color: white !important;
           background-color: blue;
+        }
+
+        &.chatworkCompletionSuggestRoomListFocus {
+          @include focusRoomList;
+        }
+
+        &:hover {
+          @include focusRoomList;
         }
       }
     }
