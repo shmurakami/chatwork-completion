@@ -263,7 +263,7 @@ elementReady(contentSelector)
             room.handleInput(e)
         })
 
-        root.addEventListener('keypress', (e) => {
+        document.addEventListener('keypress', (e) => {
             if (room.trigger(e)) {
                 room.syncRooms()
                 room.show()
