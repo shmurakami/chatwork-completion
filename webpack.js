@@ -4,7 +4,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 module.exports = {
     mode: "development",
     entry: {
-        index: './app/scripts/app.js'
+        index: './app/scripts/app.js',
+        embed: './app/scripts/embed/embed.js'
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
