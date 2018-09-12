@@ -2,6 +2,7 @@
 
 import {elementReady} from './element_ready'
 import {Listbox} from './listbox'
+import {ExtensionApi} from "./extension_api";
 
 const rootSelector = '#root'
 
@@ -28,8 +29,9 @@ let rendered = false
 
 export class Room {
     constructor() {
+        this.extensionApi = new ExtensionApi()
+
         this.clear()
-        this.syncRooms()
     }
 
     createRoomListElements(rooms) {
@@ -43,6 +45,13 @@ export class Room {
     }
 
     createListItemElement(room, index) {
+        const img = document.createElement('img')
+        img.setAttribute('src', room.icon)
+        img.classList.add('chatworkCompletionSuggestRoomListIcon')
+
+        const span = document.createElement('span')
+        span.textContent = room.name
+
         const li = document.createElement('li')
         li.setAttribute('role', 'option')
         li.setAttribute('tabindex', -1)
@@ -52,13 +61,16 @@ export class Room {
             li.classList.add('chatworkCompletionSuggestRoomListFocus')
         }
         li.classList.add('chatworkCompletionSuggestRoomList')
-        li.textContent = room.name
+
         if (room.hasUnread === true) {
             li.classList.add('chatworkCompletionSuggestRoomListHasUnread')
         }
         if (room.hasMention === true) {
             li.classList.add('chatworkCompletionSuggestRoomListHasMention')
         }
+
+        li.appendChild(img)
+        li.appendChild(span)
 
         li.addEventListener('click', (e) => {
             this.selectRoom(room.id)
@@ -201,15 +213,20 @@ export class Room {
         new Listbox(backgroundElement, roomListElement)
     }
 
-    syncRooms() {
+    async syncRooms() {
         rooms = []
-        document.querySelectorAll('.roomListItem').forEach(li => {
-            let hasMention = !!(li.querySelector('li.roomListBadges__unreadBadge--hasMemtion'))
-            rooms.push({
-                id: li.getAttribute('data-rid'),
-                name: li.querySelector('.roomListItem__roomName').textContent,
-                hasMention: hasMention,
-                hasUnread: hasMention || !!(li.querySelector('li._unreadBadge')),
+        await this.extensionApi.getRooms(fetchedRooms => {
+            fetchedRooms.forEach(room => {
+                if (room.type.getValue() !== 'group') {
+                    return
+                }
+                rooms.push({
+                    id: room.getId(),
+                    name: room.getName(),
+                    icon: room.getIcon().getValue(),
+                    hasMention: room.hasMention(),
+                    hasUnread: room.isUnread(),
+                })
             })
         })
     }

@@ -1,9 +1,9 @@
 import {elementReady} from "../element_ready";
 
-export class Embed {
+class Embed {
     embed() {
         const script = document.createElement('script')
-        script.setAttribute('src', chrome.extension.getURL('scripts/embed/extension.js'))
+        script.setAttribute('src', chrome.extension.getURL('dist/index.bundle.js'))
         document.querySelector('body').appendChild(script)
     }
 }

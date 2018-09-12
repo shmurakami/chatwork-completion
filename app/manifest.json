@@ -8,15 +8,10 @@
     "storage",
     "*://*/*"
   ],
-  "background": {
-    "scripts": [
-      "scripts/background.js"
-    ]
-  },
   "content_scripts": [
     {
       "js": [
-        "dist/index.bundle.js"
+        "dist/embed.bundle.js"
       ],
       "css": [
         "styles/app.css"
@@ -27,7 +22,7 @@
       ]
     }
   ],
-  "web_accessible_resources": ["scripts/embed/extension.js"],
+  "web_accessible_resources": ["dist/index.bundle.js"],
   "icons": {
     "48": "images/icon48.png"
   }
