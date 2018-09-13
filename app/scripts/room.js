@@ -80,11 +80,7 @@ export class Room {
     }
 
     selectRoom(roomId) {
-        const selector = `li.roomListItem[data-rid="${roomId}"]`
-        const li = document.querySelector(selector)
-        if (li) {
-            li.click()
-        }
+        location.hash = `#!rid${roomId}`;
         this.dismiss()
     }
 
