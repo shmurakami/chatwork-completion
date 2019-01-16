@@ -221,7 +221,11 @@ export class Room {
                     name: room.getName(),
                     icon: room.getIcon().getValue(),
                     hasMention: room.hasMention(),
-                    hasUnread: room.isUnread(),
+                    hasUnread: room.matchUnread({
+                        read: _ => false,
+                        unread: _ => true,
+                        overUnread: _ => true,
+                    }),
                 })
             })
         })
