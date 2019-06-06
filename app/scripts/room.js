@@ -114,17 +114,14 @@ export class Room {
             }
         })
 
-        if (filteredRooms.length > 0) {
-            return filteredRooms
-        }
-
         filtered
             .filter((room) => {
                 return room.hasMention === false && room.hasUnread === false
             })
             .slice(0, 20)
             .forEach(pusher)
-        return filteredRooms
+
+        return filteredRooms.slice(0, 20)
     }
 
     handleInput(event) {
