@@ -2,7 +2,10 @@
 
 import {elementReady} from './element_ready'
 
-const textareaSelector = '#_chatText'
+const wrapperAreaSelector = '#root'
+
+const messageAreaSelector = '#_chatSendArea'
+const textareaSelector = '.chatInput__textarea'
 
 export class Mention {
     constructor() {
@@ -42,11 +45,23 @@ export class Mention {
 
 }
 
-elementReady(textareaSelector)
-    .then((textarea) => {
-        const mention = new Mention()
+const setupMention = textareaSelector => {
+    elementReady(textareaSelector)
+        .then(textarea => {
+            const mention = new Mention()
 
-        textarea.addEventListener('keypress', (e) => {
-            mention.handler(textarea.value, e)
+            textarea.addEventListener('keypress', (e) => {
+                mention.handler(textarea.value, e)
+            })
         })
-    })
+}
+
+
+window.onhashchange = function () {
+    setupMention(textareaSelector)
+}
+
+// elementReady(wrapperAreaSelector)
+//     .then(chatContent => {
+//         setupMention(messageAreaSelector)
+//     })
