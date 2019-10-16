@@ -131,19 +131,19 @@ export class Room {
             return
         }
 
-        if (code === 'Enter') {
+        // if isComposed is false, converting multi byte chara
+        if (code === 'Enter' && event.isComposing === false) {
             this.selectRoomList()
         }
+    }
 
+    suggestRooms(event) {
+        const code = event.code
         if (code === 'ArrowUp' || code === 'ArrowDown') {
             // don't handle
             return
         }
 
-        this.suggestRooms()
-    }
-
-    suggestRooms() {
         const text = roomInputElement.value
         const filteredRooms = this.filterRoom(text)
         this.renderSuggestRooms(filteredRooms)
@@ -166,6 +166,34 @@ export class Room {
         }
         await this.makeDialog()
         rendered = true
+    }
+
+    registerEvents() {
+        new Listbox(backgroundElement, roomListElement)
+
+        backgroundElement.addEventListener('click', () => {
+            this.dismiss()
+        })
+
+        backgroundElement.addEventListener('keydown', (e) => {
+            this.handleInput(e)
+        })
+
+        roomInputElement.addEventListener('click', (e) => {
+            // don't hide dialog if clicked input element
+            e.stopPropagation()
+        })
+
+        roomInputElement.addEventListener('keyup', (e) => {
+            this.suggestRooms(e)
+        })
+
+        document.addEventListener('keypress', (e) => {
+            if (this.trigger(e)) {
+                this.syncRooms()
+                this.show()
+            }
+        })
     }
 
     makeDialog() {
@@ -202,8 +230,6 @@ export class Room {
         }
         backgroundElement.classList.add(backgroundActiveClass)
         roomInputElement.focus()
-
-        new Listbox(backgroundElement, roomListElement)
     }
 
     async syncRooms() {
@@ -250,7 +276,6 @@ export class Room {
 
 elementReady(contentSelector)
     .then(() => {
-        const root = document.querySelector(rootSelector)
         const room = new Room
         room.addDialog()
 
@@ -258,30 +283,6 @@ elementReady(contentSelector)
         roomInputElement = document.querySelector(roomInputSelector)
         roomListElement = document.querySelector(roomListSelector)
 
-        backgroundElement.addEventListener('click', () => {
-            room.dismiss()
-        })
-
-        backgroundElement.addEventListener('keydown', (e) => {
-            if (e.code === 'Escape') {
-                room.dismiss()
-            }
-        })
-
-        roomInputElement.addEventListener('click', (e) => {
-            // don't hide dialog if clicked input element
-            e.stopPropagation()
-        })
-
-        roomInputElement.addEventListener('keyup', (e) => {
-            room.handleInput(e)
-        })
-
-        document.addEventListener('keypress', (e) => {
-            if (room.trigger(e)) {
-                room.syncRooms()
-                room.show()
-            }
-        })
+        room.registerEvents()
     })
 

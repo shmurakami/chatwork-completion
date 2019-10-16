@@ -34,16 +34,19 @@ class Listbox {
         }
         element.classList.add(focusClassName)
 
-        if (this.listBoxNode.scrollHeight > this.listBoxNode.clientHeight) {
-            const scrollBottom = this.listBoxNode.clientHeight + this.listBoxNode.scrollTop
-            const elementBottom = element.offsetTop + element.offsetHeight
+        // scroll following
+        // 5 = margin. how to get from code?
+        const margin = 5
+        const elementTop = (this.position) * (element.clientHeight + margin)
+        const elementBottom = (this.position + 1) * (element.clientHeight + margin)
 
-            if (elementBottom > scrollBottom) {
-                this.listBoxNode.scrollTop = elementBottom - this.listBoxNode.clientHeight
+        const scrollAmount = this.listBoxNode.scrollTop
+        const listHeight = this.listBoxNode.clientHeight
 
-            } else if (element.offsetTop < this.listBoxNode.scrollTop) {
-                this.listBoxNode.scrollTop = element.offsetTop
-            }
+        if (scrollAmount > elementTop) {
+            this.listBoxNode.scrollTop = elementTop
+        } else if (elementBottom >= scrollAmount + listHeight) {
+            this.listBoxNode.scrollTop = elementBottom - listHeight + margin
         }
     }
 
