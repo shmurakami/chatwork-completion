@@ -1,5 +1,7 @@
 import {elementReady} from "./element_ready";
 
+import {FavoriteItems, FavoriteItem, Message, Room, Speaker} from './favorite/FavoriteItem'
+
 import starHeader from '../images/star_header.png'
 import favStar from '../images/star.png'
 
@@ -145,6 +147,9 @@ class Favorite {
         }
 
         const messageId = messageElement.getAttribute('data-mid')
+        const message = messageElement.querySelector('pre').textContent.substring(0, 1024)
+        const date = messageElement.querySelector('._timeStamp').textContent
+
         const roomId = messageElement.getAttribute('data-rid')
 
         const roomHeader = document.querySelector(roomHeaderSelector)
@@ -156,126 +161,12 @@ class Favorite {
         const speakerIcon = speakerImage.getAttribute('src')
         const speakerName = speakerImage.getAttribute('alt')
 
-        const message = messageElement.querySelector('pre').textContent.substring(0, 1024)
-        const date = messageElement.querySelector('._timeStamp').textContent
-
-        const favoriteItem = new FavoriteItem(messageId, message, date, roomId, roomIcon, roomName, speakerIcon, speakerName)
+        const favoriteItem = new FavoriteItem(
+            new Message(messageId, message, date),
+            new Room(roomId, roomName, roomIcon),
+            new Speaker(speakerName, speakerIcon))
         console.log(favoriteItem)
         this.favoriteItems.set(favoriteItem)
-    }
-}
-
-class FavoriteItems {
-    constructor() {
-        this.storageKey = `chatworkCompletionFavorite`
-
-        const favorites = this.getFromStorage() || {items: []}
-        this.favorites = favorites.items
-    }
-
-    getList() {
-        // TODO sort by date desc
-        return this.favorites
-    }
-
-    /**
-     * @param {FavoriteItem} favoriteItem
-     */
-    set(favoriteItem) {
-        // TODO check item count, duplicated item
-        this.favorites.push(favoriteItem.toObject())
-        this.setToStorage(this.favorites)
-    }
-
-    remove(messageId) {
-        const index = this.favorites
-            .filter(f => f.messageId === messageId)
-            .map((_, i) => {
-                return i
-            })
-        delete this.favorites[index]
-        this.setToStorage(this.favorites)
-    }
-
-    setToStorage(favorites) {
-        console.log(JSON.stringify({items: favorites}))
-        localStorage.setItem(this.storageKey, JSON.stringify({items: favorites}))
-    }
-
-    getFromStorage() {
-        return JSON.parse(localStorage.getItem(this.storageKey))
-    }
-}
-
-class FavoriteItem {
-    constructor(messageId, message, date, roomId, roomIcon, roomName, speakerIcon, speakerName) {
-        this.messageId = messageId;
-        this.message = message;
-        this.date = date;
-        this.roomId = roomId;
-        this.roomIcon = roomIcon;
-        this.roomName = roomName;
-        this.speakerIcon = speakerIcon;
-        this.speakerName = speakerName;
-    }
-
-    getMessageId() {
-        return this.messageId
-    }
-
-    toObject() {
-        return {
-            messageId: this.messageId,
-            message: this.message,
-            roomId: this.roomId,
-            roomIcon: this.roomIcon,
-            roomName: this.roomName,
-            date: this.date,
-            speakerIcon: this.speakerIcon,
-            speakerName: this.speakerName,
-        }
-    }
-
-    toListItemElement() {
-        const list = document.createElement('li')
-        list.classList.add('chatworkCompletionFavoriteListItem')
-
-        const profile = document.createElement('div')
-        profile.classList.add('chatworkCompletionFavoriteListItemProfile')
-
-        const icon = document.createElement('img')
-        icon.setAttribute('src', this.icon)
-        icon.classList.add('chatworkCompletionFavoriteListItemAccountIcon')
-
-        const name = document.createElement('span')
-        name.classList.add('chatworkCompletionFavoriteListItemProfileName')
-
-        const date = document.createElement('span')
-        date.classList.add('chatworkCompletionFavoriteListItemDate')
-
-        const message = document.createElement('p')
-        message.classList.add('chatworkCompletionFavoriteListItemMessage')
-
-        const room = document.createElement('p')
-        room.classList.add('chatworkCompletionFavoriteListItemRoom')
-
-        const roomIcon = document.createElement('img')
-        roomIcon.setAttribute('src', this.roomIcon)
-        roomIcon.classList.add('chatworkCompletionFavoriteListItemRoomIcon')
-
-        const roomName = document.createElement('small')
-        roomName.classList.add('chatworkCompletionFavoriteListItemRoomName')
-
-        profile.appendChild(icon)
-        profile.appendChild(name)
-        profile.appendChild(date)
-
-        room.appendChild(roomIcon)
-        room.appendChild(roomName)
-
-        list.appendChild(profile)
-        list.appendChild(room)
-        return list
     }
 }
 
