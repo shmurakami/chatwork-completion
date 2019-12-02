@@ -3,7 +3,8 @@ import {elementReady} from "./element_ready";
 import starHeader from '../images/star_header.png'
 import favStar from '../images/star.png'
 
-const rootWrapperSelector = '#_mainContent'
+const rootWrapperSelector = 'currentselectedroom'
+const roomHeaderSelector = '#_roomHeader .chatRoomHeader__titleContainer'
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_content'
 
@@ -84,11 +85,26 @@ class Favorite {
         const wrapper = document.querySelector(rootWrapperSelector)
         wrapper.addEventListener('mouseover', (event) => {
             // this is implemented forcibly and may has performance issue
-            // it should be listened by _message class element
+            // it should be listened by _message class element but difficult to listen by this element directly
             const message = wrapper.querySelector('._message:hover')
             if (message) {
+                // auto created message is not needed to save
+                if (message.classList.contains('autoCreatedMessage')) {
+                    return
+                }
                 this.messageHoverEventListener(message)
             }
+        })
+
+        wrapper.addEventListener('click', (event) => {
+            if (!event.target) {
+                return
+            }
+            const favTooltip = event.target.closest('li.chatworkCompletionTooltipFavorite')
+            if (!favTooltip) {
+                return
+            }
+            this.clickFavTooltip(favTooltip)
         })
     }
 
@@ -99,7 +115,7 @@ class Favorite {
         }
 
         const firstChild = actionNavigation.children[0]
-        if (firstChild.hasAttribute('extensionFavorite')) {
+        if (firstChild && firstChild.hasAttribute('extensionFavorite')) {
             return
         }
 
@@ -118,6 +134,34 @@ class Favorite {
         favMenu.appendChild(favLabel)
 
         actionNavigation.insertBefore(favMenu, actionNavigation.children[0])
+        console.log('added fav tooltip')
+    }
+
+    clickFavTooltip(favTooltipElement) {
+        const messageElement = favTooltipElement.closest('div._message')
+        if (!messageElement) {
+            console.log('no message')
+            return
+        }
+
+        const messageId = messageElement.getAttribute('data-mid')
+        const roomId = messageElement.getAttribute('data-rid')
+
+        const roomHeader = document.querySelector(roomHeaderSelector)
+        const roomIcon = roomHeader.querySelector('#_subRoomIcon').getAttribute('src')
+        const roomName = roomHeader.querySelector('._roomTitleText').textContent
+
+        // probably no problem to get first img element...
+        const speakerImage = messageElement.querySelector('img')
+        const speakerIcon = speakerImage.getAttribute('src')
+        const speakerName = speakerImage.getAttribute('alt')
+
+        const message = messageElement.querySelector('pre').textContent.substring(0, 1024)
+        const date = messageElement.querySelector('._timeStamp').textContent
+
+        const favoriteItem = new FavoriteItem(messageId, message, date, roomId, roomIcon, roomName, speakerIcon, speakerName)
+        console.log(favoriteItem)
+        this.favoriteItems.set(favoriteItem)
     }
 }
 
@@ -135,50 +179,60 @@ class FavoriteItems {
     }
 
     /**
-     *
      * @param {FavoriteItem} favoriteItem
      */
     set(favoriteItem) {
-        // TODO check item count
-        this.favorites[favoriteItem.getId()] = favoriteItem.toObject()
+        // TODO check item count, duplicated item
+        this.favorites.push(favoriteItem.toObject())
         this.setToStorage(this.favorites)
     }
 
-    remove(id) {
-        delete this.favorites[id]
+    remove(messageId) {
+        const index = this.favorites
+            .filter(f => f.messageId === messageId)
+            .map((_, i) => {
+                return i
+            })
+        delete this.favorites[index]
         this.setToStorage(this.favorites)
     }
 
     setToStorage(favorites) {
+        console.log(JSON.stringify({items: favorites}))
         localStorage.setItem(this.storageKey, JSON.stringify({items: favorites}))
     }
 
     getFromStorage() {
-        return localStorage.getItem(this.storageKey)
+        return JSON.parse(localStorage.getItem(this.storageKey))
     }
 }
 
 class FavoriteItem {
-    constructor(id, message, roomIcon, roomName, date, icon) {
-        this.id = id;
+    constructor(messageId, message, date, roomId, roomIcon, roomName, speakerIcon, speakerName) {
+        this.messageId = messageId;
         this.message = message;
+        this.date = date;
+        this.roomId = roomId;
         this.roomIcon = roomIcon;
         this.roomName = roomName;
-        this.date = date;
-        this.icon = icon;
+        this.speakerIcon = speakerIcon;
+        this.speakerName = speakerName;
     }
 
-    getId() {
-        return this.id
+    getMessageId() {
+        return this.messageId
     }
 
     toObject() {
         return {
-            id: this.id,
+            messageId: this.messageId,
             message: this.message,
+            roomId: this.roomId,
+            roomIcon: this.roomIcon,
             roomName: this.roomName,
             date: this.date,
-            icon: this.icon,
+            speakerIcon: this.speakerIcon,
+            speakerName: this.speakerName,
         }
     }
 
