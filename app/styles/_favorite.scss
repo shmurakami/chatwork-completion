@@ -1,4 +1,73 @@
+.chatworkCompletionFavoriteHeaderButton {
+}
+
 .chatworkCompletionFavorite {
-  .chatworkCompletionFavoriteHeaderButton {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100%;
+  border-left: 1px solid #000; // TODO change to cw blue color code
+  background-color: #fff;
+  z-index: 10000;
+
+  .chatworkCompletionFavoriteList {
+    z-index: 10001;
+    list-style: none;
+
+
+    .chatworkCompletionFavoriteListItem {
+      border-bottom: 1px solid #000;
+      min-height: 56px;
+      max-height: 168px;
+      padding: 5px;
+
+      .chatworkCompletionFavoriteListItemProfile {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+
+        .chatworkCompletionFavoriteListItemAccountIcon {
+          height: 32px;
+          border-top-left-radius: 50%;
+          border-top-right-radius: 50%;
+          border-bottom-left-radius: 50%;
+          margin-right: 5px;
+        }
+
+        .chatworkCompletionFavoriteListItemProfileName {
+          flex-grow: 2;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          max-width: 199px;
+        }
+
+        .chatworkCompletionFavoriteListItemDate {
+        }
+      }
+
+      .chatworkCompletionFavoriteListItemMessage {
+        margin-left: 37px;
+      }
+
+      .chatworkCompletionFavoriteListItemRoom {
+        display: flex;
+        align-items: center;
+        margin-left: 37px;
+      }
+
+      .chatworkCompletionFavoriteListItemRoomIcon {
+        width: 32px;
+        height: 32px;
+        margin-right: 5px;
+      }
+
+      .chatworkCompletionFavoriteListItemRoomName {
+        margin-right: 10px;
+      }
+    }
   }
+
 }
