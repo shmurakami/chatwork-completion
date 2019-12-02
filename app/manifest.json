@@ -22,7 +22,7 @@
       ]
     }
   ],
-  "web_accessible_resources": ["dist/index.bundle.js"],
+  "web_accessible_resources": ["dist/index.bundle.js", "images/star.svg"],
   "icons": {
     "48": "images/icon48.png"
   }
