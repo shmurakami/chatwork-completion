@@ -26,6 +26,7 @@ class Favorite {
 
         const list = document.createElement('li')
         list.setAttribute('role', 'button')
+        list.setAttribute('aria-label', 'Favorite')
         list.id = 'extension_openFavorite'
         list.classList.add('globalHeaderNavItem', '_showDescription', 'chatworkCompletionFavorite')
 
