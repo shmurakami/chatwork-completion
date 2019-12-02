@@ -1,7 +1,9 @@
 import {elementReady} from "./element_ready";
 
 import starHeader from '../images/star_header.png'
+import favStar from '../images/star.png'
 
+const rootWrapperSelector = '#_mainContent'
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_content'
 
@@ -76,6 +78,46 @@ class Favorite {
 
         aside.appendChild(ul)
         return aside
+    }
+
+    addFavButton() {
+        const wrapper = document.querySelector(rootWrapperSelector)
+        wrapper.addEventListener('mouseover', (event) => {
+            // this is implemented forcibly and may has performance issue
+            // it should be listened by _message class element
+            const message = wrapper.querySelector('._message:hover')
+            if (message) {
+                this.messageHoverEventListener(message)
+            }
+        })
+    }
+
+    messageHoverEventListener(messageElement) {
+        const actionNavigation = messageElement.querySelector('._messageActionNav')
+        if (!actionNavigation) {
+            return
+        }
+
+        const firstChild = actionNavigation.children[0]
+        if (firstChild.hasAttribute('extensionFavorite')) {
+            return
+        }
+
+        const favMenu = document.createElement('li')
+        favMenu.classList.add('linkStatus', 'actionNav__item', 'chatworkCompletionTooltipFavorite')
+        favMenu.setAttribute('extensionFavorite', true)
+
+        const favIcon = document.createElement('img')
+        favIcon.setAttribute('src', favStar)
+        favIcon.classList.add('chatworkCompletionTooltipFavoriteIcon')
+
+        const favLabel = document.createElement('span')
+        favLabel.classList.add('_showAreaText', 'showAreatext', 'actionNav__itemLabel')
+        favLabel.textContent = 'Fav'
+        favMenu.appendChild(favIcon)
+        favMenu.appendChild(favLabel)
+
+        actionNavigation.insertBefore(favMenu, actionNavigation.children[0])
     }
 }
 
@@ -188,4 +230,5 @@ elementReady(headerParentSelector)
         const favorite = new Favorite()
         favorite.addMenu()
         favorite.addSidebar()
+        favorite.addFavButton()
     })

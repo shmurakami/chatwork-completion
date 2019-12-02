@@ -1,6 +1,13 @@
 .chatworkCompletionFavoriteHeaderButton {
 }
 
+.chatworkCompletionTooltipFavorite {
+  .chatworkCompletionTooltipFavoriteIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .chatworkCompletionFavorite {
   display: none;
   position: fixed;
