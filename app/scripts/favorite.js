@@ -180,17 +180,6 @@ class FavoriteItem {
         list.appendChild(profile)
         list.appendChild(room)
         return list
-//   li
-//    div
-//     img
-//     span
-//     span
-//    /div
-//    p
-//    p
-//     img
-//     small
-//    /p
     }
 }
 
