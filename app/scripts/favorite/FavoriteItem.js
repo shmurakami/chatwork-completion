@@ -9,8 +9,9 @@ class FavoriteItems {
     }
 
     getList() {
-        // TODO sort by date desc
-        return this.favorites
+        return this.favorites.map(item => {
+            return FavoriteItem.restore(item)
+        })
     }
 
     /**
@@ -64,6 +65,14 @@ class FavoriteItem {
         this.speakerIcon = speaker.icon
     }
 
+    static restore(object) {
+        return new this(
+            new Message(object.messageId, object.message, object.date),
+            new Room(object.roomId, object.roomName, object.roomIcon),
+            new Speaker(object.speakerName, object.speakerIcon)
+        )
+    }
+
     toObject() {
         const message = this.messageModel.toObject()
         const room = this.roomModel.toObject()
@@ -90,26 +99,32 @@ class FavoriteItem {
 
         const icon = document.createElement('img')
         icon.setAttribute('src', this.speakerIcon)
+        icon.setAttribute('alt', '')
         icon.classList.add('chatworkCompletionFavoriteListItemAccountIcon')
 
         const name = document.createElement('span')
         name.classList.add('chatworkCompletionFavoriteListItemProfileName')
+        name.textContent = this.speakerName
 
         const date = document.createElement('span')
         date.classList.add('chatworkCompletionFavoriteListItemDate')
+        date.textContent = this.messageDate
 
         const message = document.createElement('p')
         message.classList.add('chatworkCompletionFavoriteListItemMessage')
+        message.textContent = this.message
 
         const room = document.createElement('p')
         room.classList.add('chatworkCompletionFavoriteListItemRoom')
 
         const roomIcon = document.createElement('img')
         roomIcon.setAttribute('src', this.roomIcon)
+        roomIcon.setAttribute('alt', '')
         roomIcon.classList.add('chatworkCompletionFavoriteListItemRoomIcon')
 
         const roomName = document.createElement('small')
         roomName.classList.add('chatworkCompletionFavoriteListItemRoomName')
+        roomName.textContent = this.roomName
 
         profile.appendChild(icon)
         profile.appendChild(name)
@@ -119,6 +134,7 @@ class FavoriteItem {
         room.appendChild(roomName)
 
         list.appendChild(profile)
+        list.appendChild(message)
         list.appendChild(room)
         return list
     }

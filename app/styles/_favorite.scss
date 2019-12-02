@@ -11,10 +11,10 @@
 .chatworkCompletionFavorite {
   display: none;
   position: fixed;
-  top: 0;
+  top: 42px;
   right: 0;
   width: 350px;
-  height: 100%;
+  height: calc(100% - 42px);
   border-left: 1px solid #000; // TODO change to cw blue color code
   background-color: #fff;
   z-index: 10000;

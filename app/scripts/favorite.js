@@ -8,7 +8,7 @@ import favStar from '../images/star.png'
 const rootWrapperSelector = 'currentselectedroom'
 const roomHeaderSelector = '#_roomHeader .chatRoomHeader__titleContainer'
 const headerParentSelector = '#_adminNavi'
-const sidebarParentSelector = '#_content'
+const sidebarParentSelector = '#_mainContent'
 
 const sidebarId = 'extensionFavorite'
 
@@ -61,10 +61,14 @@ class Favorite {
 
     addSidebar() {
         const parent = document.querySelector(sidebarParentSelector)
-        const sidebar = this.createSidebarElement(this.favoriteItems.getList())
-        parent.appendChild(sidebar)
+        const favoriteItems = this.createSidebarElement(this.favoriteItems.getList())
+        parent.appendChild(favoriteItems)
     }
 
+    /**
+     * @param {FavoriteItems[]} items
+     * @returns {HTMLElement}
+     */
     createSidebarElement(items) {
         const aside = document.createElement('aside')
         aside.id = sidebarId
