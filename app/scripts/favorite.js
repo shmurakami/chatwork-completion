@@ -186,19 +186,13 @@ class Favorite {
             new Message(messageId, message, date),
             new Room(roomId, roomName, roomIcon),
             new Speaker(speakerName, speakerIcon))
-        console.log(favoriteItem)
         this.favoriteItems.set(favoriteItem)
 
         // TODO update view
     }
 
     jumpButtonListener(buttonElement) {
-        const hash = buttonElement.getAttribute('data-hash')
-        if (!hash) {
-            return
-        }
-        // TODO not working
-        location.hash = hash
+        // do nothing. call original jump event
     }
 
     unStarButtonListener(buttonElement) {
@@ -207,7 +201,7 @@ class Favorite {
             return
         }
         this.favoriteItems.remove(messageId)
-        // TODO update view
+        buttonElement.closest('li.chatworkCompletionFavoriteListItem').remove()
     }
 }
 
