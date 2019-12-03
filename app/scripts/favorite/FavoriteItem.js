@@ -11,9 +11,13 @@ class FavoriteItems {
     }
 
     getList() {
-        return this.favorites.map(item => {
-            return FavoriteItem.restore(item)
-        })
+        return this.favorites
+            .sort((e1, e2) => {
+                return e1.compare(e2)
+            })
+            .map(item => {
+                return FavoriteItem.restore(item)
+            })
     }
 
     /**
@@ -86,6 +90,20 @@ class FavoriteItem {
             speakerIcon: speaker.icon,
             speakerName: speaker.name,
         }
+    }
+
+    /**
+     * sort by desc order
+     * @param {FavoriteItem} item
+     */
+    compare(item) {
+        if (this.messageDate > item.messageDate) {
+            return -1
+        }
+        if (this.messageDate < item.messageDate) {
+            return 1
+        }
+        return 0
     }
 
     toListItemElement() {
