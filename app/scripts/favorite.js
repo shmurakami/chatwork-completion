@@ -128,7 +128,7 @@ class Favorite {
             if (!favTooltip) {
                 return
             }
-            this.clickFavTooltip(favTooltip)
+            this.favorite(favTooltip)
         })
     }
 
@@ -160,7 +160,7 @@ class Favorite {
         actionNavigation.insertBefore(favMenu, actionNavigation.children[0])
     }
 
-    clickFavTooltip(favTooltipElement) {
+    favorite(favTooltipElement) {
         const messageElement = favTooltipElement.closest('div._message')
         if (!messageElement) {
             console.log('no message')
@@ -188,7 +188,8 @@ class Favorite {
             new Speaker(speakerName, speakerIcon))
         this.favoriteItems.set(favoriteItem)
 
-        // TODO update view
+        const list = document.querySelector('ul.chatworkCompletionFavoriteList')
+        list.insertBefore(favoriteItem.toListItemElement(), list.children[0])
     }
 
     jumpButtonListener(buttonElement) {

@@ -1,6 +1,6 @@
 'use strict'
 
-import starred from '../../images/starred.png'
+import star from '../../images/star.png'
 
 class FavoriteItems {
     constructor() {
@@ -136,7 +136,7 @@ class FavoriteItem {
         jumpButton.setAttribute('data-mid', this.messageId)
 
         const unStarImage = document.createElement('img')
-        unStarImage.setAttribute('src', starred)
+        unStarImage.setAttribute('src', star)
         unStarImage.setAttribute('alt', '')
 
         const unStarButton = document.createElement('button')
@@ -152,10 +152,6 @@ class FavoriteItem {
 
         list.append(profile, message, room, actionBar)
         return list
-    }
-
-    createPermalinkHash() {
-        return `#!rid${this.roomId}-${this.messageId}`
     }
 }
 
