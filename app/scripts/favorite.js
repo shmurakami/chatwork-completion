@@ -185,7 +185,8 @@ class Favorite {
         const favoriteItem = new FavoriteItem(
             new Message(messageId, message, date),
             new Room(roomId, roomName, roomIcon),
-            new Speaker(speakerName, speakerIcon))
+            new Speaker(speakerName, speakerIcon),
+            Date.now())
         this.favoriteItems.set(favoriteItem)
 
         const list = document.querySelector('ul.chatworkCompletionFavoriteList')

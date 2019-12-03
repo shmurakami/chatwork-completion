@@ -51,8 +51,10 @@ class FavoriteItem {
      * @param {Message} message
      * @param {Room} room
      * @param {Speaker} speaker
+     * @param {number} currentTime
      */
-    constructor(message, room, speaker) {
+    constructor(message, room, speaker, currentTime) {
+        this.currentTime = currentTime;
         this.messageModel = message
         this.roomModel = room
         this.speakerModel = speaker
@@ -65,13 +67,16 @@ class FavoriteItem {
         this.roomIcon = room.icon
         this.speakerName = speaker.name
         this.speakerIcon = speaker.icon
+
+        this.addedTime = currentTime
     }
 
     static restore(object) {
         return new this(
             new Message(object.messageId, object.message, object.date),
             new Room(object.roomId, object.roomName, object.roomIcon),
-            new Speaker(object.speakerName, object.speakerIcon)
+            new Speaker(object.speakerName, object.speakerIcon),
+            object.addedTime
         )
     }
 
@@ -89,6 +94,7 @@ class FavoriteItem {
             roomName: room.name,
             speakerIcon: speaker.icon,
             speakerName: speaker.name,
+            addedTime: this.addedTime,
         }
     }
 
@@ -97,10 +103,10 @@ class FavoriteItem {
      * @param {FavoriteItem} item
      */
     compare(item) {
-        if (this.messageDate > item.messageDate) {
+        if (this.addedTime > item.addedTime) {
             return -1
         }
-        if (this.messageDate < item.messageDate) {
+        if (this.addedTime < item.addedTime) {
             return 1
         }
         return 0
