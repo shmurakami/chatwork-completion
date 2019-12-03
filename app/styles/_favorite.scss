@@ -15,20 +15,26 @@
   right: 0;
   width: 350px;
   height: calc(100% - 42px);
-  border-left: 1px solid #000; // TODO change to cw blue color code
+  border-left: 1px solid #12202F;
   background-color: #fff;
   z-index: 10000;
+
+  .chatworkCompletionFavoriteHeader {
+    height: 42px;
+    background-color: #12202F;
+    color: #E2E3E6;
+    line-height: 42px;
+    font-size: 16px;
+    padding-left: 8px;
+  }
 
   .chatworkCompletionFavoriteList {
     z-index: 10001;
     list-style: none;
 
-
     .chatworkCompletionFavoriteListItem {
       border-bottom: 1px solid #000;
-      min-height: 56px;
-      max-height: 168px;
-      padding: 5px;
+      padding: 8px;
 
       .chatworkCompletionFavoriteListItemProfile {
         display: flex;
@@ -72,7 +78,30 @@
       }
 
       .chatworkCompletionFavoriteListItemRoomName {
-        margin-right: 10px;
+      }
+
+      .chatworkCompletionFavoriteListItemActionBar {
+        display: none;
+        text-align: right;
+
+        .chatworkCompletionFavoriteListItemActionButton {
+          width: 32px;
+          height: 32px;
+          padding: 0;
+          border-radius: 4px;
+          cursor: pointer;
+
+          img {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+
+      &:hover {
+        .chatworkCompletionFavoriteListItemActionBar {
+          display: block;
+        }
       }
     }
   }

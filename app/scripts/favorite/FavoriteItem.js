@@ -1,5 +1,7 @@
 'use strict'
 
+import starred from '../../images/starred.png'
+
 class FavoriteItems {
     constructor() {
         this.storageKey = `chatworkCompletionFavorite`
@@ -24,12 +26,8 @@ class FavoriteItems {
     }
 
     remove(messageId) {
-        const index = this.favorites
-            .filter(f => f.messageId === messageId)
-            .map((_, i) => {
-                return i
-            })
-        delete this.favorites[index]
+        this.favorites = this.favorites.filter(item => item.messageId !== messageId)
+        console.log(`un star message: ${messageId}`)
         this.setToStorage(this.favorites)
     }
 
@@ -94,7 +92,7 @@ class FavoriteItem {
         const list = document.createElement('li')
         list.classList.add('chatworkCompletionFavoriteListItem')
 
-        const profile = document.createElement('div')
+        const profile = document.createElement('p')
         profile.classList.add('chatworkCompletionFavoriteListItemProfile')
 
         const icon = document.createElement('img')
@@ -126,17 +124,38 @@ class FavoriteItem {
         roomName.classList.add('chatworkCompletionFavoriteListItemRoomName')
         roomName.textContent = this.roomName
 
-        profile.appendChild(icon)
-        profile.appendChild(name)
-        profile.appendChild(date)
+        // action items
+        const actionBar = document.createElement('p')
+        actionBar.classList.add('chatworkCompletionFavoriteListItemActionBar')
 
-        room.appendChild(roomIcon)
-        room.appendChild(roomName)
+        const jumpButton = document.createElement('button')
+        jumpButton.textContent = '#←'
+        jumpButton.classList.add('chatworkCompletionFavoriteListItemActionButton', '_messageLink') // _messageLink is trigger to open dialog
+        jumpButton.setAttribute('data-role', 'jump')
+        jumpButton.setAttribute('data-rid', this.roomId)
+        jumpButton.setAttribute('data-mid', this.messageId)
 
-        list.appendChild(profile)
-        list.appendChild(message)
-        list.appendChild(room)
+        const unStarImage = document.createElement('img')
+        unStarImage.setAttribute('src', starred)
+        unStarImage.setAttribute('alt', '')
+
+        const unStarButton = document.createElement('button')
+        unStarButton.appendChild(unStarImage)
+        unStarButton.classList.add('chatworkCompletionFavoriteListItemActionButton')
+        unStarButton.setAttribute('data-id', this.messageId)
+        unStarButton.setAttribute('data-role', 'unStar')
+        actionBar.append(jumpButton, unStarButton)
+
+        profile.append(icon, name, date)
+
+        room.append(roomIcon, roomName)
+
+        list.append(profile, message, room, actionBar)
         return list
+    }
+
+    createPermalinkHash() {
+        return `#!rid${this.roomId}-${this.messageId}`
     }
 }
 

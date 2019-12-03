@@ -63,6 +63,19 @@ class Favorite {
         const parent = document.querySelector(sidebarParentSelector)
         const favoriteItems = this.createSidebarElement(this.favoriteItems.getList())
         parent.appendChild(favoriteItems)
+
+        // set click handler to action buttons
+        parent.querySelector(`#${sidebarId}`)
+            .addEventListener('click', (event) => {
+                const clickElement = parent.querySelector('button.chatworkCompletionFavoriteListItemActionButton:hover')
+                if (clickElement) {
+                    if (clickElement.getAttribute('data-role') === 'jump') {
+                        this.jumpButtonListener(clickElement)
+                    } else if (clickElement.getAttribute('data-role') === 'unStar') {
+                        this.unStarButtonListener(clickElement)
+                    }
+                }
+            })
     }
 
     /**
@@ -74,6 +87,10 @@ class Favorite {
         aside.id = sidebarId
         aside.classList.add('chatworkCompletionFavorite')
 
+        const header = document.createElement('header')
+        header.classList.add('chatworkCompletionFavoriteHeader')
+        header.textContent = '★ Favorites'
+
         const ul = document.createElement('ul')
         ul.classList.add('chatworkCompletionFavoriteList')
 
@@ -83,6 +100,7 @@ class Favorite {
             ul.appendChild(list)
         }
 
+        aside.appendChild(header)
         aside.appendChild(ul)
         return aside
     }
@@ -140,7 +158,6 @@ class Favorite {
         favMenu.appendChild(favLabel)
 
         actionNavigation.insertBefore(favMenu, actionNavigation.children[0])
-        console.log('added fav tooltip')
     }
 
     clickFavTooltip(favTooltipElement) {
@@ -171,6 +188,26 @@ class Favorite {
             new Speaker(speakerName, speakerIcon))
         console.log(favoriteItem)
         this.favoriteItems.set(favoriteItem)
+
+        // TODO update view
+    }
+
+    jumpButtonListener(buttonElement) {
+        const hash = buttonElement.getAttribute('data-hash')
+        if (!hash) {
+            return
+        }
+        // TODO not working
+        location.hash = hash
+    }
+
+    unStarButtonListener(buttonElement) {
+        const messageId = buttonElement.getAttribute('data-id')
+        if (!messageId) {
+            return
+        }
+        this.favoriteItems.remove(messageId)
+        // TODO update view
     }
 }
 
