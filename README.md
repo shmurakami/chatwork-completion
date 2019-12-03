@@ -1,4 +1,4 @@
-# ChatWork Completion
+# Chatwork Completion
 
 This (Will) provides new keyboard shortcut and auto completion.
 
