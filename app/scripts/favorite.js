@@ -168,7 +168,7 @@ class Favorite {
         }
 
         const messageId = messageElement.getAttribute('data-mid')
-        const message = messageElement.querySelector('pre').textContent.substring(0, 1024)
+        const message = messageElement.querySelector('pre').textContent
         const date = messageElement.querySelector('._timeStamp').textContent
 
         const roomId = messageElement.getAttribute('data-rid')
@@ -179,6 +179,7 @@ class Favorite {
 
         // probably no problem to get first img element...
         const speakerImage = messageElement.querySelector('img')
+        // FIXME if message element does not have icon, it breaks. should get from profile data directly
         const speakerIcon = speakerImage.getAttribute('src')
         const speakerName = speakerImage.getAttribute('alt')
 
