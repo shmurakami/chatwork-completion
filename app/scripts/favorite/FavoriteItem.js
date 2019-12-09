@@ -12,11 +12,11 @@ class FavoriteItems {
 
     getList() {
         return this.favorites
-            .sort((e1, e2) => {
-                return e1.compare(e2)
-            })
             .map(item => {
                 return FavoriteItem.restore(item)
+            })
+            .sort((e1, e2) => {
+                return e1.compare(e2)
             })
     }
 
@@ -36,7 +36,6 @@ class FavoriteItems {
     }
 
     setToStorage(favorites) {
-        console.log(JSON.stringify({items: favorites}))
         localStorage.setItem(this.storageKey, JSON.stringify({items: favorites}))
     }
 
@@ -60,7 +59,7 @@ class FavoriteItem {
         this.speakerModel = speaker
 
         this.messageId = message.id
-        this.message = message.message
+        this.message = message.message.substring(0, 1024)
         this.messageDate = message.date
         this.roomId = room.id
         this.roomName = room.name

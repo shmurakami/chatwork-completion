@@ -31,6 +31,9 @@
   .chatworkCompletionFavoriteList {
     z-index: 10001;
     list-style: none;
+    height: calc(100% - 42px);
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .chatworkCompletionFavoriteListItem {
       border-bottom: 1px solid #000;
