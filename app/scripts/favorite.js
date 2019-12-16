@@ -133,7 +133,7 @@ class Favorite {
     }
 
     messageHoverEventListener(messageElement) {
-        const actionNavigation = messageElement.querySelector('._messageActionNav')
+        const actionNavigation = messageElement.querySelector('ul[role="toolbar"]')
         if (!actionNavigation) {
             return
         }
