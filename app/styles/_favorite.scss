@@ -38,6 +38,7 @@
     .chatworkCompletionFavoriteListItem {
       border-bottom: 1px solid #000;
       padding: 8px;
+      position: relative;
 
       .chatworkCompletionFavoriteListItemProfile {
         display: flex;
@@ -86,6 +87,9 @@
       .chatworkCompletionFavoriteListItemActionBar {
         display: none;
         text-align: right;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
 
         .chatworkCompletionFavoriteListItemActionButton {
           width: 32px;
