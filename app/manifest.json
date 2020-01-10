@@ -1,6 +1,6 @@
 {
   "name": "Chatwork completion",
-  "version": "0.2.1",
+  "version": "0.2.5",
   "manifest_version": 2,
   "description": "chatwork input completion",
   "permissions": [
@@ -22,7 +22,7 @@
       ]
     }
   ],
-  "web_accessible_resources": ["dist/index.bundle.js"],
+  "web_accessible_resources": ["dist/index.bundle.js", "images/star.svg"],
   "icons": {
     "48": "images/icon48.png"
   }
