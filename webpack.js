@@ -8,7 +8,7 @@ module.exports = {
         embed: './app/scripts/embed/embed.js'
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(['app/dist']),
     ],
     output: {
         filename: '[name].bundle.js',
