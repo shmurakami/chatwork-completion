@@ -1,6 +1,7 @@
 import {elementReady} from "./element_ready";
 
-import {FavoriteItems, FavoriteItem, Message, Room, Speaker} from './favorite/FavoriteItem'
+import {FavoriteItems, FavoriteItem} from './favorite/FavoriteItem'
+import {Message, Room, Account} from './message/message'
 
 import starHeader from '../images/star_header.png'
 import favStar from '../images/star.png'
@@ -186,7 +187,7 @@ class Favorite {
         const favoriteItem = new FavoriteItem(
             new Message(messageId, message, date),
             new Room(roomId, roomName, roomIcon),
-            new Speaker(speakerName, speakerIcon),
+            new Account(speakerName, speakerIcon),
             Date.now())
         this.favoriteItems.set(favoriteItem)
 
