@@ -7,7 +7,7 @@ const wrapperAreaSelector = '#root'
 const messageAreaSelector = '#_chatSendArea'
 const textareaSelector = '.chatInput__textarea'
 
-export class Mention {
+export class MentionShortcut {
     constructor() {
         this.toButton = document.querySelector('#_to')
     }
@@ -48,7 +48,7 @@ export class Mention {
 const setupMention = textareaSelector => {
     elementReady(textareaSelector)
         .then(textarea => {
-            const mention = new Mention()
+            const mention = new MentionShortcut()
 
             textarea.addEventListener('keypress', (e) => {
                 mention.handler(textarea.value, e)
