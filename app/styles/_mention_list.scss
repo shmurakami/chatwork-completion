@@ -1,0 +1,65 @@
+@import "sidebar_module";
+
+.chatworkCompletionMentionListHeaderButton {
+}
+
+.chatworkCompletionMentionList {
+  @include sidebarContainer;
+
+  .chatworkCompletionMentionListHeader {
+    @include sidebarContentsHeader;
+  }
+
+  .chatworkCompletionMentionList {
+    @include sidebarContentsListContainer;
+
+    .chatworkCompletionMentionListItem {
+      @include sidebarContentsListItem;
+
+      &:hover {
+        .chatworkCompletionMentionListItemActionBar {
+          display: block;
+        }
+      }
+
+      .chatworkCompletionMentionListItemProfile {
+        @include messageProfileContainer;
+
+        .chatworkCompletionMentionListItemAccountIcon {
+          @include messageAccountIcon;
+        }
+
+        .chatworkCompletionMentionListItemProfileName {
+          @include messageAccountName;
+        }
+
+        .chatworkCompletionMentionListItemDate {
+        }
+      }
+
+      .chatworkCompletionMentionListItemMessage {
+        @include messageBody;
+      }
+
+      .chatworkCompletionMentionListItemRoom {
+        @include messageRoomContainer;
+      }
+
+      .chatworkCompletionMentionListItemRoomIcon {
+        @include messageRoomIcon;
+      }
+
+      .chatworkCompletionMentionListItemRoomName {
+      }
+
+      .chatworkCompletionMentionListItemActionBar {
+        @include sidebarContentsListItemActionBar;
+
+        .chatworkCompletionMentionListItemActionButton {
+          @include sidebarContentsListItemActionButton;
+        }
+      }
+    }
+  }
+
+}
