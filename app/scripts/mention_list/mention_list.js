@@ -46,13 +46,13 @@ export class MentionList {
         buttonImage.classList = ['globalHeaderPlatform__icon']
 
         const buttonContent = document.createElement('span')
-        buttonContent.classList.add('globalHeaderNavItem__button', 'chatworkCompletionMentionHeaderButton')
+        buttonContent.classList.add('globalHeaderNavItem__button', 'chatworkCompletionMentionListHeaderButton')
 
         const list = document.createElement('li')
         list.setAttribute('role', 'button')
         list.setAttribute('aria-label', 'Favorite')
         list.id = 'extension_openMentionList'
-        list.classList.add('globalHeaderNavItem', '_showDescription', 'chatworkCompletionMentionHeaderButton')
+        list.classList.add('globalHeaderNavItem', '_showDescription')
 
         buttonContent.appendChild(buttonImage)
         list.appendChild(buttonContent)
@@ -126,10 +126,20 @@ export class MentionList {
 
     // view in sidebar for not yet registered
     createNotRegisteredView(parentElement) {
-        const div = document.createElement('div')
-        parentElement.appendChild(div)
-        console.log('not registered view')
+        const section = document.createElement('section')
 
+        const h1 = document.createElement('h1')
+        h1.textContent = 'You have not registered API Token.'
+        h1.classList.add('chatworkCompletionMentionListNotRegisteredHeading')
+
+        const button = document.createElement('button')
+        button.textContent = 'Register'
+        button.classList.add('chatworkCompletionMentionListNotRegisteredButton')
+
+        section.appendChild(h1)
+        section.appendChild(button)
+
+        parentElement.appendChild(section)
         return parentElement
     }
 
