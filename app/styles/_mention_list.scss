@@ -12,6 +12,22 @@
 
   .chatworkCompletionMentionListHeader {
     @include sidebarContentsHeader;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .chatworkCompletionMentionListHeaderActionContainer {
+      .chatworkCompletionMentionListHeaderActionButton {
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        text-align: center;
+        margin-right: 5px;
+        //border: 1px solid #E2E3E6;
+        //border-radius: 4px;
+        padding: 3px;
+      }
+    }
   }
 
   .chatworkCompletionMentionList {

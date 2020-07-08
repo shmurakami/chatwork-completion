@@ -51,9 +51,9 @@ module.exports = {
                 ]
             },
             {
-                test: /\.png/,
+                test: /\.png$|\.svg$/,
                 use: ['url-loader']
-            },
+            }
         ]
     },
     resolve: {

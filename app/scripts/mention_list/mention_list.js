@@ -19,6 +19,9 @@ import {MentionMessages} from "./mention_message";
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_mainContent'
 
+import reload from '../../images/refresh.svg'
+import settings from '../../images/settings.svg'
+
 const sidebarId = 'extensionMentionList'
 
 export class MentionList {
@@ -88,7 +91,7 @@ export class MentionList {
                     }
                 })
         } else {
-            const notRegisteredViewElement = this.createNotRegisteredView(mentionListAsideElement)
+            const notRegisteredViewElement = this.createSettingView(mentionListAsideElement)
             parent.appendChild(notRegisteredViewElement)
         }
     }
@@ -105,6 +108,21 @@ export class MentionList {
         const header = document.createElement('header')
         header.classList.add('chatworkCompletionMentionListHeader')
         header.textContent = '@ Mention List'
+
+        const reloadButton = document.createElement('img')
+        reloadButton.src = reload
+        reloadButton.classList.add('chatworkCompletionMentionListHeaderActionButton')
+
+        const settingsButton = document.createElement('img')
+        settingsButton.src = settings
+        settingsButton.classList.add('chatworkCompletionMentionListHeaderActionButton')
+
+        const actions = document.createElement('div')
+        actions.classList.add('chatworkCompletionMentionListHeaderActionContainer')
+        actions.appendChild(reloadButton)
+        actions.appendChild(settingsButton)
+
+        header.appendChild(actions)
 
         aside.appendChild(header)
         return aside
@@ -125,7 +143,7 @@ export class MentionList {
     }
 
     // view in sidebar for not yet registered
-    createNotRegisteredView(parentElement) {
+    createSettingView(parentElement) {
         const section = document.createElement('section')
 
         const h1 = document.createElement('h1')
