@@ -14,13 +14,14 @@
 
 import {baseUrl} from './base_url'
 import {elementReady} from "../element_ready";
-import {MentionMessages} from "./mention_message";
+import {MentionMessage} from "./mention_message";
 
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_mainContent'
 
 import reload from '../../images/refresh.svg'
 import settings from '../../images/settings.svg'
+import {Account, Message, Room} from "../message/message";
 
 const sidebarId = 'extensionMentionList'
 
@@ -29,9 +30,6 @@ const accessTokenStorageKey = 'chatworkCompletionMentionListAccessToken'
 export class MentionList {
     constructor() {
         this.isRegistered = !!localStorage.getItem(accessTokenStorageKey)
-
-        const messages = []
-        this.mentionMessages = new MentionMessages(messages)
     }
 
     addMenu() {
@@ -78,7 +76,7 @@ export class MentionList {
         const parent = document.querySelector(sidebarParentSelector)
         const mentionListAsideElement = this.createSidebarHeaderElement()
 
-        const mentionListElement = this.createSidebarElement(mentionListAsideElement, this.mentionMessages)
+        const mentionListElement = this.createSidebarElement(mentionListAsideElement)
 
         const settingViewElement = this.createSettingView(mentionListAsideElement)
 
@@ -120,6 +118,7 @@ export class MentionList {
         reloadButton.classList.add('chatworkCompletionMentionListHeaderActionButton')
         reloadButton.addEventListener('click', _ => {
             console.log('update mention list')
+            this.refreshMentionList()
         })
 
         const settingsButton = document.createElement('img')
@@ -138,21 +137,17 @@ export class MentionList {
         return aside
     }
 
-    createSidebarElement(parentElement, mentionMessages) {
+    createSidebarElement(parentElement) {
         const section = document.createElement('section')
         section.classList.add('chatworkCompletionMentionListMentionView', 'active')
 
         const ul = document.createElement('ul')
-        ul.classList.add('chatworkCompletionMentionList')
-
-        let list
-        for (let item of mentionMessages.items()) {
-            list = item.toListItemElement()
-            ul.appendChild(list)
-        }
+        ul.classList.add('chatworkCompletionMentionListItemList')
 
         section.appendChild(ul)
         parentElement.appendChild(section)
+
+        this.refreshMentionList()
         return parentElement
     }
 
@@ -210,6 +205,41 @@ export class MentionList {
         localStorage.removeItem(accessTokenStorageKey)
         document.querySelector('.chatworkCompletionMentionListSettingAccessTokenField').value = ''
         console.log('deleted access token from storage')
+    }
+
+    refreshMentionList() {
+        fetch(`${baseUrl}/test.php`, {
+            headers: {
+                'Content-Type': `application/json`,
+                'X-Token': localStorage.getItem(accessTokenStorageKey)
+            }
+        })
+            .then(response => {
+                response.json()
+                    .then(contents => {
+                        // refresh dom node
+                        const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
+                        const section = document.querySelector('.chatworkCompletionMentionListMentionView')
+                        section.removeChild(oldUl)
+                        const ul = document.createElement('ul')
+                        ul.classList.add('chatworkCompletionMentionListItemList')
+                        section.appendChild(ul)
+
+                        contents.list.map(item => {
+                            const mention = new MentionMessage(
+                                new Message(item.id, item.body, item.sendTime),
+                                new Room(item.roomId, item.roomName, item.roomIconUrl),
+                                new Account(item.fromAccountId, item.fromAccountName, item.fromAccountAvatarUrl))
+                            ul.appendChild(mention.toListItemElement())
+                        })
+                    })
+                    .catch(error => console.error(error))
+            })
+            .catch(error => {
+                console.error(error)
+                // localStorage.removeItem(accessTokenStorageKey)
+            })
+
     }
 
     togglePane() {

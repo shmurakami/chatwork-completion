@@ -15,6 +15,28 @@ export class MentionMessages {
 }
 
 export class MentionMessage {
+    /**
+     *
+     * @param {Message} message
+     * @param {Room} room
+     * @param {Account} speaker
+     * @param {number} currentTime
+     */
+    constructor(message, room, speaker, currentTime) {
+        this.currentTime = currentTime;
+        this.messageModel = message
+        this.roomModel = room
+        this.speakerModel = speaker
+
+        this.messageId = message.id
+        this.message = message.message.substring(0, 1024)
+        this.messageDate = message.date
+        this.roomId = room.id
+        this.roomName = room.name
+        this.roomIcon = room.icon
+        this.speakerName = speaker.name
+        this.speakerIcon = speaker.icon
+    }
 
     toListItemElement() {
         const list = document.createElement('li')
