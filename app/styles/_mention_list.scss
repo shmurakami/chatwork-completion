@@ -30,6 +30,21 @@
     }
   }
 
+  .chatworkCompletionMentionListMentionView {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+
+  .chatworkCompletionMentionListSettingView {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+
+
   .chatworkCompletionMentionList {
     @include sidebarContentsListContainer;
 
