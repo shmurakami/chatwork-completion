@@ -16,6 +16,17 @@ export class Message {
     }
 }
 
+export class MessageDate {
+    constructor(date) {
+        this.date = date
+    }
+
+    format() {
+        const date = this.date
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+}
+
 export class Room {
     constructor(id, name, icon) {
         this.id = id;

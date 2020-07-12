@@ -20,10 +20,8 @@ export class MentionMessage {
      * @param {Message} message
      * @param {Room} room
      * @param {Account} speaker
-     * @param {number} currentTime
      */
-    constructor(message, room, speaker, currentTime) {
-        this.currentTime = currentTime;
+    constructor(message, room, speaker) {
         this.messageModel = message
         this.roomModel = room
         this.speakerModel = speaker
