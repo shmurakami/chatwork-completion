@@ -22,10 +22,11 @@ const sidebarParentSelector = '#_mainContent'
 import reload from '../../images/refresh.svg'
 import settings from '../../images/settings.svg'
 import {Account, Message, MessageDate, Room} from "../message/message";
-
-const sidebarId = 'extensionMentionList'
+import {favoriteSidebarId} from "../favorite";
 
 const storageKey = 'chatworkCompletionMentionList'
+
+export const mentionSidebarId = 'extensionMentionList'
 
 export class MentionList {
     constructor() {
@@ -64,11 +65,13 @@ export class MentionList {
     }
 
     headerClickListener() {
-        const container = document.querySelector(`#${sidebarId}`)
+        const container = document.querySelector(`#${mentionSidebarId}`)
         if (container.style.display === 'block') {
             container.style.display = 'none'
         } else {
             container.style.display = 'block'
+            // hide fav view
+            document.querySelector(`#${favoriteSidebarId}`).style.display = 'none'
         }
     }
 
@@ -83,30 +86,15 @@ export class MentionList {
         parent.appendChild(mentionListElement)
         parent.appendChild(settingViewElement)
 
-        // set click handler to action buttons
-        // parent.querySelector(`#${sidebarId}`)
-        //     .addEventListener('click', (event) => {
-        //         const clickElement = parent.querySelector('button.chatworkCompletionMentionListItemActionButton:hover')
-        //         if (clickElement) {
-        //             if (clickElement.getAttribute('data-role') === 'jump') {
-        //                 this.jumpButtonListener(clickElement)
-        //             }
-        //         }
-        //     })
-
         // in default mention list is active, setting is inactive
         if (!this.isRegistered) {
             this.togglePane()
         }
     }
 
-    jumpButtonListener(buttonElement) {
-        // do nothing. call original jump event
-    }
-
     createSidebarHeaderElement() {
         const aside = document.createElement('aside')
-        aside.id = sidebarId
+        aside.id = mentionSidebarId
         aside.classList.add('chatworkCompletionMentionList')
 
         const header = document.createElement('header')

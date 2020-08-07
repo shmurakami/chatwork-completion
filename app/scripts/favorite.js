@@ -5,13 +5,14 @@ import {Message, Room, Account} from './message/message'
 
 import starHeader from '../images/star_header.png'
 import favStar from '../images/star.png'
+import {mentionSidebarId} from "./mention_list/mention_list";
 
 const rootWrapperSelector = 'currentselectedroom'
 const roomHeaderSelector = '#_roomHeader .chatRoomHeader__titleContainer'
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_mainContent'
 
-const sidebarId = 'extensionFavorite'
+export const favoriteSidebarId = 'extensionFavorite'
 
 class Favorite {
     constructor() {
@@ -52,11 +53,13 @@ class Favorite {
     }
 
     headerClickListener() {
-        const container = document.querySelector(`#${sidebarId}`)
+        const container = document.querySelector(`#${favoriteSidebarId}`)
         if (container.style.display === 'block') {
             container.style.display = 'none'
         } else {
             container.style.display = 'block'
+            // hide mention view
+            document.querySelector(`#${mentionSidebarId}`).style.display = 'none'
         }
     }
 
@@ -66,7 +69,7 @@ class Favorite {
         parent.appendChild(favoriteItems)
 
         // set click handler to action buttons
-        parent.querySelector(`#${sidebarId}`)
+        parent.querySelector(`#${favoriteSidebarId}`)
             .addEventListener('click', (event) => {
                 const clickElement = parent.querySelector('button.chatworkCompletionFavoriteListItemActionButton:hover')
                 if (clickElement) {
@@ -85,7 +88,7 @@ class Favorite {
      */
     createSidebarElement(items) {
         const aside = document.createElement('aside')
-        aside.id = sidebarId
+        aside.id = favoriteSidebarId
         aside.classList.add('chatworkCompletionFavorite')
 
         const header = document.createElement('header')
