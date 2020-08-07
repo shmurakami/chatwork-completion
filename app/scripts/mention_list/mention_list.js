@@ -84,15 +84,15 @@ export class MentionList {
         parent.appendChild(settingViewElement)
 
         // set click handler to action buttons
-        parent.querySelector(`#${sidebarId}`)
-            .addEventListener('click', (event) => {
-                const clickElement = parent.querySelector('button.chatworkCompletionMentionListItemActionButton:hover')
-                if (clickElement) {
-                    if (clickElement.getAttribute('data-role') === 'jump') {
-                        this.jumpButtonListener(clickElement)
-                    }
-                }
-            })
+        // parent.querySelector(`#${sidebarId}`)
+        //     .addEventListener('click', (event) => {
+        //         const clickElement = parent.querySelector('button.chatworkCompletionMentionListItemActionButton:hover')
+        //         if (clickElement) {
+        //             if (clickElement.getAttribute('data-role') === 'jump') {
+        //                 this.jumpButtonListener(clickElement)
+        //             }
+        //         }
+        //     })
 
         // in default mention list is active, setting is inactive
         if (!this.isRegistered) {

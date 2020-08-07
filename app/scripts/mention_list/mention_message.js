@@ -82,6 +82,7 @@ export class MentionMessage {
         jumpButton.setAttribute('data-role', 'jump')
         jumpButton.setAttribute('data-rid', this.roomId)
         jumpButton.setAttribute('data-mid', this.messageId)
+        actionBar.appendChild(jumpButton)
 
         const unStarImage = document.createElement('img')
         unStarImage.setAttribute('src', star)
