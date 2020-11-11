@@ -167,7 +167,6 @@ export class MentionList {
         saveButton.classList.add('chatworkCompletionMentionListSettingAccessTokenSave')
         saveButton.addEventListener('click', _ => {
             this.saveAccessToken(accountIdInput.value, input.value)
-            // TODO access to server and switch to mention list view
         })
 
         const deleteButton = document.createElement('button')
@@ -193,11 +192,29 @@ export class MentionList {
     }
 
     saveAccessToken(accountId, token) {
-        localStorage.setItem(storageKey, JSON.stringify({
-            'account_id': accountId,
-            'token': token,
-        }))
-        console.log('saved access token to storage')
+        fetch(`${baseUrl}/api/auth`, {
+            method: `post`,
+            body: JSON.stringify({
+                'account_id': accountId,
+                'token': token,
+            }),
+            headers: {
+                'Access-Control-Allow-Origin': 'https://www.chatwork.com',
+                'Content-Type': `application/json`,
+            },
+        })
+            .then(async response => {
+                const json = await response.json()
+                const authToken = json.SuccessAuthenticationResponse.token.value
+                localStorage.setItem(storageKey, JSON.stringify({
+                    'account_id': accountId,
+                    'token': authToken,
+                }))
+                console.log('saved access token to storage')
+            })
+            .catch(error => {
+                console.error(error)
+            })
     }
 
     deleteAccessToken() {
