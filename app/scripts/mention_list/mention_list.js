@@ -205,7 +205,7 @@ export class MentionList {
         })
             .then(async response => {
                 const json = await response.json()
-                const authToken = json.SuccessAuthenticationResponse.token.value
+                const authToken = json.token
                 localStorage.setItem(storageKey, JSON.stringify({
                     'account_id': accountId,
                     'token': authToken,
@@ -233,27 +233,26 @@ export class MentionList {
                 'X-Token': identifier.token,
             }
         })
-            .then(response => {
-                response.json()
-                    .then(contents => {
-                        // refresh dom node
-                        const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
-                        const section = document.querySelector('.chatworkCompletionMentionListMentionView')
-                        section.removeChild(oldUl)
-                        const ul = document.createElement('ul')
-                        ul.classList.add('chatworkCompletionMentionListItemList')
-                        section.appendChild(ul)
+            .then(async response => {
+                const contents = await response.json().catch(error => { throw new Error(error)})
 
-                        contents.list.map(item => {
-                            const date = new MessageDate(new Date(item.sendTime.value * 1000))
-                            const mention = new MentionMessage(
-                                new Message(item.id.value, item.body.value, date.format()),
-                                new Room(item.roomId.value, item.roomName.value, item.roomIconUrl.value),
-                                new Account(item.fromAccountName.value, item.fromAccountAvatarUrl.value))
-                            ul.appendChild(mention.toListItemElement())
-                        })
-                    })
-                    .catch(error => console.error(error))
+                // refresh dom node
+                const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
+                const section = document.querySelector('.chatworkCompletionMentionListMentionView')
+                section.removeChild(oldUl)
+                const ul = document.createElement('ul')
+                ul.classList.add('chatworkCompletionMentionListItemList')
+                section.appendChild(ul)
+
+                contents.list.map(item => {
+                    const date = new MessageDate(new Date(item.send_time * 1000))
+                    const mention = new MentionMessage(
+                        new Message(item.id, item.body, date.format()),
+                        new Room(item.room_id, item.room_name, item.room_icon_url),
+                        new Account(item.from_account_name, item.from_account_avatar_url))
+                    ul.appendChild(mention.toListItemElement())
+                })
+
             })
             .catch(error => {
                 console.error(error)
