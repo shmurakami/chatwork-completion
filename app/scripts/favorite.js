@@ -34,7 +34,7 @@ class Favorite {
         const buttonImage = document.createElement('img')
         // buttonImage.src = '/images/star.png';
         buttonImage.src = starHeader
-        buttonImage.classList = ['globalHeaderPlatform__icon']
+        buttonImage.classList = ['chatworkCompletionFavoriteHeaderButtonImage']
         // Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">
 
         const buttonContent = document.createElement('span')
