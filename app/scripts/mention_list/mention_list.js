@@ -54,7 +54,7 @@ export class MentionList {
 
         const list = document.createElement('li')
         list.setAttribute('role', 'button')
-        list.setAttribute('aria-label', 'Favorite')
+        list.setAttribute('aria-label', 'Mention List')
         list.id = 'extension_openMentionList'
         list.classList.add('globalHeaderNavItem', '_showDescription')
 
