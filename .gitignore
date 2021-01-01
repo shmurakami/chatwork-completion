@@ -2,3 +2,5 @@
 node_modules
 app/dist
 app.crx
+app/proto
+app/scripts/service
