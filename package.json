@@ -4,7 +4,8 @@
   "description": "",
   "main": "background.js",
   "scripts": {
-    "build": "webpack --config webpack.js"
+    "build": "webpack --config webpack.js",
+    "protocGenerate": "PATH=$PATH:./app/proto protoc -I ./app/proto --js_out=import_style=commonjs:./app/scripts/service --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./app/scripts/service mention.proto authentication.proto"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,8 @@
   },
   "dependencies": {
     "fstream": "^1.0.12",
+    "google-protobuf": "^3.14.0",
+    "grpc-web": "^1.2.1",
     "svg-inline-loader": "^0.8.2"
   }
 }
