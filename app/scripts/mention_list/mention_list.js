@@ -24,6 +24,7 @@ import settings from '../../images/settings.svg'
 import {Account, Message, MessageDate, Room} from "../message/message";
 import {favoriteSidebarId} from "../favorite";
 import {AuthenticationClient} from "../client/AuthenticationClient";
+import {MentionSubscribeClient} from "../client/MentionSubscribeClient";
 
 const storageKey = 'chatworkCompletionMentionList'
 
@@ -32,6 +33,7 @@ export const mentionSidebarId = 'extensionMentionList'
 export class MentionList {
     constructor() {
         this.isRegistered = !!localStorage.getItem(storageKey)
+        this.mentionSubscribeClient = new MentionSubscribeClient();
     }
 
     addMenu() {
@@ -202,6 +204,9 @@ export class MentionList {
               'token': authToken,
             }))
             console.log('saved access token to storage')
+
+            // start subscribe
+            this.subscribe(accountId);
           })
         .catch(error => console.error(error))
     }
@@ -210,12 +215,16 @@ export class MentionList {
         localStorage.removeItem(storageKey)
         document.querySelector('.chatworkCompletionMentionListSettingAccessTokenField').value = ''
         console.log('deleted access token from storage')
+
+        // stop subscription
+        this.mentionSubscribeClient.unsubscribe();
     }
 
     refreshMentionList() {
         const identifier = JSON.parse(localStorage.getItem(storageKey))
+        const accountId = identifier.account_id;
 
-        fetch(`${baseUrl}/api/list?account_id=${identifier.account_id}`, {
+        fetch(`${baseUrl}/api/list?account_id=${accountId}`, {
             headers: {
                 'Access-Control-Allow-Origin': 'https://www.chatwork.com',
                 'Content-Type': `application/json`,
@@ -242,6 +251,8 @@ export class MentionList {
                     ul.appendChild(mention.toListItemElement())
                 })
 
+                // start subscribe
+                this.subscribe(accountId);
             })
             .catch(error => {
                 console.error(error)
@@ -254,6 +265,19 @@ export class MentionList {
         document.querySelector('.chatworkCompletionMentionListSettingView').classList.toggle('active')
     }
 
+    subscribe(accountId) {
+        this.mentionSubscribeClient.subscribe(accountId, {
+          onNext: () => {
+            console.log('onNext');
+          },
+          onError: () => {
+            console.log('onError');
+          },
+          onUnsubscribe: () => {
+            console.log('onUnsubscribe');
+          },
+        });
+    }
 }
 
 elementReady(headerParentSelector)
