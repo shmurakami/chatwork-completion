@@ -12,7 +12,6 @@
  *
  */
 
-import {baseUrl} from './base_url'
 import {elementReady} from "../element_ready";
 import {MentionMessage} from "./mention_message";
 
@@ -25,6 +24,7 @@ import {Account, Message, MessageDate, Room} from "../message/message";
 import {favoriteSidebarId} from "../favorite";
 import {AuthenticationClient} from "../client/AuthenticationClient";
 import {MentionSubscribeClient} from "../client/MentionSubscribeClient";
+import {MentionListClient} from "../client/MentionListClient";
 
 const storageKey = 'chatworkCompletionMentionList'
 
@@ -32,7 +32,8 @@ export const mentionSidebarId = 'extensionMentionList'
 
 export class MentionList {
     constructor() {
-        this.isRegistered = !!localStorage.getItem(storageKey)
+        this.isRegistered = !!localStorage.getItem(storageKey);
+        this.mentionListClient = new MentionListClient();
         this.mentionSubscribeClient = new MentionSubscribeClient();
     }
 
@@ -224,15 +225,9 @@ export class MentionList {
         const identifier = JSON.parse(localStorage.getItem(storageKey))
         const accountId = identifier.account_id;
 
-        fetch(`${baseUrl}/api/list?account_id=${accountId}`, {
-            headers: {
-                'Access-Control-Allow-Origin': 'https://www.chatwork.com',
-                'Content-Type': `application/json`,
-                'X-Token': identifier.token,
-            }
-        })
+        this.mentionListClient.fetch(accountId)
             .then(async response => {
-                const contents = await response.json().catch(error => { throw new Error(error)})
+                const reply = response.toObject();
 
                 // refresh dom node
                 const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
@@ -242,22 +237,22 @@ export class MentionList {
                 ul.classList.add('chatworkCompletionMentionListItemList')
                 section.appendChild(ul)
 
-                contents.list.map(item => {
-                    const date = new MessageDate(new Date(item.send_time * 1000))
+                reply.listList.map(item => {
+                    const date = new MessageDate(new Date(item.sendTime * 1000))
                     const mention = new MentionMessage(
                         new Message(item.id, item.body, date.format()),
-                        new Room(item.room_id, item.room_name, item.room_icon_url),
-                        new Account(item.from_account_name, item.from_account_avatar_url))
+                        new Room(item.roomId, item.roomName, item.roomIconUrl),
+                        new Account(item.fromAccountName, item.fromAccountAvatarUrl))
                     ul.appendChild(mention.toListItemElement())
                 })
 
                 // start subscribe
                 this.subscribe(accountId);
-            })
-            .catch(error => {
-                console.error(error)
-                // localStorage.removeItem(accessTokenStorageKey)
-            })
+          })
+          .catch(error => {
+              console.error(error)
+              // localStorage.removeItem(accessTokenStorageKey)
+          })
     }
 
     togglePane() {
