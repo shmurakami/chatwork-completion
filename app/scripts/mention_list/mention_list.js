@@ -195,8 +195,8 @@ export class MentionList {
     saveAccessToken(accountId, token) {
       new AuthenticationClient().authentication(accountId, token)
         .then(async response => {
-            const json = await response.json()
-            const authToken = json.token
+            const reply = response.toObject();
+            const authToken = reply.token
             localStorage.setItem(storageKey, JSON.stringify({
               'account_id': accountId,
               'token': authToken,

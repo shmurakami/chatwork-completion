@@ -10,20 +10,17 @@ export class AuthenticationClient {
     this.authenticationServicePromiseClient = new AuthenticationServicePromiseClient(
       baseUrl,
       {},
-      {
-        suppressCorsPreflight: true,
-      })
+      {})
   }
 
   authentication(accountId, token) {
 
+    const request = new AuthenticationRequest();
+    request.setAccountId(accountId);
+    request.setToken(token);
+
     return this.authenticationServicePromiseClient
-      .auth(
-        new AuthenticationRequest([
-          accountId,
-          token,
-        ])
-        , {})
+      .auth(request, {});
   }
 
 }
