@@ -2,10 +2,14 @@
 
 import {MentionSubscribeServiceClient} from '../service/mention_grpc_web_pb';
 import {MentionSubscribeRequest} from '../service/mention_pb';
+import {baseUrl} from "./base_url";
 
 export class MentionSubscribeClient {
   constructor() {
-    this.mentionSubscribeClient = new MentionSubscribeServiceClient();
+    this.mentionSubscribeClient = new MentionSubscribeServiceClient(
+      baseUrl,
+      {},
+      {});
 
     this.stream = null;
   }
