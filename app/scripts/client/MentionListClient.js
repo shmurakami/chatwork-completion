@@ -13,11 +13,13 @@ export class MentionListClient {
       {});
   }
 
-  fetch(accountId) {
+  fetch(credential) {
     const request = new MentionListRequest();
-    request.setAccountId(accountId);
+    request.setAccountId(credential.account_id);
 
-    return this.mentionServiceClient.list(request, {});
+    const metadata = {'X-Authorization': credential.token};
+
+    return this.mentionServiceClient.list(request, metadata);
   }
 
 }

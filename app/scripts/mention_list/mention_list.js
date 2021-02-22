@@ -72,10 +72,17 @@ export class MentionList {
         const container = document.querySelector(`#${mentionSidebarId}`)
         if (container.style.display === 'block') {
             container.style.display = 'none'
+            this.unsubscribe();
         } else {
             container.style.display = 'block'
             // hide fav view
             document.querySelector(`#${favoriteSidebarId}`).style.display = 'none'
+
+            // subscribe only while this menu opens
+            const credential = this.retrieveCredential()
+            if (credential) {
+              this.subscribe(credential.account_id);
+            }
         }
     }
 
@@ -222,32 +229,12 @@ export class MentionList {
     }
 
     refreshMentionList() {
-        const identifier = JSON.parse(localStorage.getItem(storageKey))
-        const accountId = identifier.account_id;
+        const credential = this.retrieveCredential()
 
-        this.mentionListClient.fetch(accountId)
+        this.mentionListClient.fetch(credential)
             .then(async response => {
-                const reply = response.toObject();
-
-                // refresh dom node
-                const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
-                const section = document.querySelector('.chatworkCompletionMentionListMentionView')
-                section.removeChild(oldUl)
-                const ul = document.createElement('ul')
-                ul.classList.add('chatworkCompletionMentionListItemList')
-                section.appendChild(ul)
-
-                reply.listList.map(item => {
-                    const date = new MessageDate(new Date(item.sendTime * 1000))
-                    const mention = new MentionMessage(
-                        new Message(item.id, item.body, date.format()),
-                        new Room(item.roomId, item.roomName, item.roomIconUrl),
-                        new Account(item.fromAccountName, item.fromAccountAvatarUrl))
-                    ul.appendChild(mention.toListItemElement())
-                })
-
-                // start subscribe
-                this.subscribe(accountId);
+                const mentionListReply = response.toObject();
+                this.refreshListElement(mentionListReply)
           })
           .catch(error => {
               console.error(error)
@@ -255,23 +242,73 @@ export class MentionList {
           })
     }
 
-    togglePane() {
-        document.querySelector('.chatworkCompletionMentionListMentionView').classList.toggle('active')
-        document.querySelector('.chatworkCompletionMentionListSettingView').classList.toggle('active')
+  refreshListElement(mentionListReply) {
+    // refresh dom node
+    const oldUl = document.querySelector('.chatworkCompletionMentionListItemList')
+    const section = document.querySelector('.chatworkCompletionMentionListMentionView')
+    section.removeChild(oldUl)
+    const ul = document.createElement('ul')
+    ul.classList.add('chatworkCompletionMentionListItemList')
+    section.appendChild(ul)
+
+    mentionListReply.listList.map(
+      mentionReplyValues => this.appendMentionElementToList(ul, mentionReplyValues)
+    )
+  }
+
+  mentionReplyValuesToListItemElement(mentionReplyValues) {
+    const date = new MessageDate(new Date(mentionReplyValues.sendTime * 1000));
+    const mention = new MentionMessage(
+      new Message(mentionReplyValues.id, mentionReplyValues.body, date.format()),
+      new Room(mentionReplyValues.roomId, mentionReplyValues.roomName, mentionReplyValues.roomIconUrl),
+      new Account(mentionReplyValues.fromAccountName, mentionReplyValues.fromAccountAvatarUrl));
+    return mention.toListItemElement();
+  }
+
+  appendMentionElementToList(ul, mentionReplyValues) {
+    ul.appendChild(this.mentionReplyValuesToListItemElement(mentionReplyValues))
+  }
+
+  prependMentionElementToList(ul, mentionReplyValues) {
+    ul.insertBefore(this.mentionReplyValuesToListItemElement(mentionReplyValues), ul.childNodes[0] || null)
+  }
+
+  togglePane() {
+    document.querySelector('.chatworkCompletionMentionListMentionView').classList.toggle('active')
+    document.querySelector('.chatworkCompletionMentionListSettingView').classList.toggle('active')
     }
 
     subscribe(accountId) {
-        this.mentionSubscribeClient.subscribe(accountId, {
-          onNext: () => {
-            console.log('onNext');
-          },
-          onError: () => {
-            console.log('onError');
-          },
-          onUnsubscribe: () => {
-            console.log('onUnsubscribe');
-          },
-        });
+      const credential = this.retrieveCredential()
+
+      const ul = document.querySelector('.chatworkCompletionMentionListItemList')
+      if (!ul) {
+        return;
+      }
+
+      this.mentionSubscribeClient.subscribe(credential, {
+        onNext: (mentionReply) => {
+          this.prependMentionElementToList(ul, mentionReply.toObject());
+        },
+        onError: (e) => {
+          console.log('onError', e);
+        },
+        onUnsubscribe: () => {
+          // need to subscribe again to keep subscribing
+          // wrap with setTimeout to stop while machine asleep
+          window.setTimeout(() => {
+            this.subscribe(accountId);
+          }, 100)
+        },
+      });
+    }
+
+    unsubscribe() {
+      this.mentionSubscribeClient.unsubscribe();
+    }
+
+    retrieveCredential() {
+      return JSON.parse(localStorage.getItem(storageKey)) || null;
     }
 }
 

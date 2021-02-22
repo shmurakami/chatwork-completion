@@ -58,8 +58,8 @@ class Favorite {
             container.style.display = 'none'
         } else {
             container.style.display = 'block'
-            // hide mention view
-            document.querySelector(`#${mentionSidebarId}`).style.display = 'none'
+            // hide mention view... need to unsubscribe
+            // document.querySelector(`#${mentionSidebarId}`).style.display = 'none'
         }
     }
 

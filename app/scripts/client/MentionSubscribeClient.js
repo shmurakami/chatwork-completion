@@ -14,18 +14,26 @@ export class MentionSubscribeClient {
     this.stream = null;
   }
 
-  subscribe(accountId, {onNext, onError, onUnsubscribe}) {
+  subscribe(credential, {onNext, onError, onUnsubscribe}) {
     if (!!this.stream) {
       return;
     }
 
     const request = new MentionSubscribeRequest();
-    request.setAccountId(accountId);
+    request.setAccountId(credential.account_id);
 
-    const stream = this.mentionSubscribeClient.subscribe(request, {});
+    const metadata = {
+      deadline: new Date().getTime() + 60 * 1000,
+      'X-Authorization': credential.token,
+    };
+
+    const stream = this.mentionSubscribeClient.subscribe(request, metadata);
     stream.on('data', onNext)
       .on('error', onError)
-      .on('end', onUnsubscribe);
+      .on('end', () => {
+        this.stream = null;
+        onUnsubscribe();
+      });
     this.stream = stream;
   }
 
