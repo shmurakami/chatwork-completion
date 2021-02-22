@@ -1,0 +1,159 @@
+@import "sidebar_module";
+
+.chatworkCompletionMentionListHeaderButton {
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: 300;
+  display: block;
+}
+
+.chatworkCompletionMentionList {
+  @include sidebarContainer;
+
+  .chatworkCompletionMentionListHeader {
+    @include sidebarContentsHeader;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .chatworkCompletionMentionListHeaderActionContainer {
+      .chatworkCompletionMentionListHeaderActionButton {
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        text-align: center;
+        margin-right: 5px;
+        //border: 1px solid #E2E3E6;
+        //border-radius: 4px;
+        padding: 3px;
+      }
+    }
+  }
+
+  .chatworkCompletionMentionListMentionView {
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100% - 42px);
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .chatworkCompletionMentionListSettingView {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+
+
+  .chatworkCompletionMentionListItemList {
+    @include sidebarContentsListContainer;
+
+    .chatworkCompletionMentionListItem {
+      @include sidebarContentsListItem;
+
+      &:hover {
+        .chatworkCompletionMentionListItemActionBar {
+          display: block;
+        }
+      }
+
+      .chatworkCompletionMentionListItemProfile {
+        @include messageProfileContainer;
+
+        .chatworkCompletionMentionListItemAccountIcon {
+          @include messageAccountIcon;
+        }
+
+        .chatworkCompletionMentionListItemProfileName {
+          @include messageAccountName;
+        }
+
+        .chatworkCompletionMentionListItemDate {
+        }
+      }
+
+      .chatworkCompletionMentionListItemMessage {
+        @include messageBody;
+      }
+
+      .chatworkCompletionMentionListItemRoom {
+        @include messageRoomContainer;
+      }
+
+      .chatworkCompletionMentionListItemRoomIcon {
+        @include messageRoomIcon;
+      }
+
+      .chatworkCompletionMentionListItemRoomName {
+      }
+
+      .chatworkCompletionMentionListItemActionBar {
+        @include sidebarContentsListItemActionBar;
+
+        .chatworkCompletionMentionListItemActionButton {
+          @include sidebarContentsListItemActionButton;
+        }
+      }
+    }
+  }
+
+
+  .chatworkCompletionMentionListNotRegisteredHeading {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .chatworkCompletionMentionListSettingAccessTokenField {
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    margin: 10px auto 10px 40px;
+    width: 250px;
+  }
+
+  @mixin button {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .175rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    cursor: pointer;
+  }
+
+  .chatworkCompletionMentionListSettingAccessTokenButtonContainer {
+    margin: 0 auto;
+    text-align: center;
+
+    .chatworkCompletionMentionListSettingAccessTokenSave {
+      @include button;
+      color: #fff;
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .chatworkCompletionMentionListSettingAccessTokenDelete {
+      @include button;
+      color: #fff;
+      background-color: #dc3545;
+      border-color: #dc3545;
+      margin-left: 5px;
+    }
+  }
+
+}

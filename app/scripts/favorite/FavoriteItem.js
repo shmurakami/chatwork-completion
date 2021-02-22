@@ -1,6 +1,7 @@
 'use strict'
 
 import star from '../../images/star.png'
+import {Message, Room, Account} from "../message/message";
 
 class FavoriteItems {
     constructor() {
@@ -49,7 +50,7 @@ class FavoriteItem {
      *
      * @param {Message} message
      * @param {Room} room
-     * @param {Speaker} speaker
+     * @param {Account} speaker
      * @param {number} currentTime
      */
     constructor(message, room, speaker, currentTime) {
@@ -74,7 +75,7 @@ class FavoriteItem {
         return new this(
             new Message(object.messageId, object.message, object.date),
             new Room(object.roomId, object.roomName, object.roomIcon),
-            new Speaker(object.speakerName, object.speakerIcon),
+            new Account(object.speakerName, object.speakerIcon),
             object.addedTime
         )
     }
@@ -178,50 +179,4 @@ class FavoriteItem {
     }
 }
 
-class Message {
-    constructor(id, message, date) {
-        this.id = id;
-        this.message = message;
-        this.date = date;
-    }
-
-    toObject() {
-        return {
-            id: this.id,
-            message: this.message,
-            date: this.date
-        }
-    }
-}
-
-class Room {
-    constructor(id, name, icon) {
-        this.id = id;
-        this.name = name;
-        this.icon = icon;
-    }
-
-    toObject() {
-        return {
-            id: this.id,
-            name: this.name,
-            icon: this.icon,
-        }
-    }
-}
-
-class Speaker {
-    constructor(name, icon) {
-        this.name = name;
-        this.icon = icon;
-    }
-
-    toObject() {
-        return {
-            name: this.name,
-            icon: this.icon,
-        }
-    }
-}
-
-export {FavoriteItems, FavoriteItem, Message, Room, Speaker}
+export {FavoriteItems, FavoriteItem}

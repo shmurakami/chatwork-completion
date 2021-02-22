@@ -1,4 +1,10 @@
+@import "sidebar_module";
+
 .chatworkCompletionFavoriteHeaderButton {
+  .chatworkCompletionFavoriteHeaderButtonImage {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .chatworkCompletionTooltipFavorite {
@@ -9,56 +15,33 @@
 }
 
 .chatworkCompletionFavorite {
-  display: none;
-  position: fixed;
-  top: 42px;
-  right: 0;
-  width: 350px;
-  height: calc(100% - 42px);
-  border-left: 1px solid #12202F;
-  background-color: #fff;
-  z-index: 10000;
+  @include sidebarContainer;
 
   .chatworkCompletionFavoriteHeader {
-    height: 42px;
-    background-color: #12202F;
-    color: #E2E3E6;
-    line-height: 42px;
-    font-size: 16px;
-    padding-left: 8px;
+    @include sidebarContentsHeader;
   }
 
   .chatworkCompletionFavoriteList {
-    z-index: 10001;
-    list-style: none;
-    height: calc(100% - 42px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    @include sidebarContentsListContainer;
 
     .chatworkCompletionFavoriteListItem {
-      border-bottom: 1px solid #000;
-      padding: 8px;
-      position: relative;
+      @include sidebarContentsListItem;
+
+      &:hover {
+        .chatworkCompletionFavoriteListItemActionBar {
+          display: block;
+        }
+      }
 
       .chatworkCompletionFavoriteListItemProfile {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
+        @include messageProfileContainer;
 
         .chatworkCompletionFavoriteListItemAccountIcon {
-          height: 32px;
-          border-top-left-radius: 50%;
-          border-top-right-radius: 50%;
-          border-bottom-left-radius: 50%;
-          margin-right: 5px;
+          @include messageAccountIcon;
         }
 
         .chatworkCompletionFavoriteListItemProfileName {
-          flex-grow: 2;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          max-width: 199px;
+          @include messageAccountName;
         }
 
         .chatworkCompletionFavoriteListItemDate {
@@ -66,50 +49,28 @@
       }
 
       .chatworkCompletionFavoriteListItemMessage {
-        margin-left: 37px;
+        @include messageBody;
       }
 
       .chatworkCompletionFavoriteListItemRoom {
-        display: flex;
-        align-items: center;
-        margin-left: 37px;
+        @include messageRoomContainer;
       }
 
       .chatworkCompletionFavoriteListItemRoomIcon {
-        width: 32px;
-        height: 32px;
-        margin-right: 5px;
+        @include messageRoomIcon;
       }
 
       .chatworkCompletionFavoriteListItemRoomName {
       }
 
       .chatworkCompletionFavoriteListItemActionBar {
-        display: none;
-        text-align: right;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
+        @include sidebarContentsListItemActionBar;
 
         .chatworkCompletionFavoriteListItemActionButton {
-          width: 32px;
-          height: 32px;
-          padding: 0;
-          border-radius: 4px;
-          cursor: pointer;
-
-          img {
-            width: 16px;
-            height: 16px;
-          }
+          @include sidebarContentsListItemActionButton;
         }
       }
 
-      &:hover {
-        .chatworkCompletionFavoriteListItemActionBar {
-          display: block;
-        }
-      }
     }
   }
 

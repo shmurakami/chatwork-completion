@@ -1,16 +1,18 @@
 import {elementReady} from "./element_ready";
 
-import {FavoriteItems, FavoriteItem, Message, Room, Speaker} from './favorite/FavoriteItem'
+import {FavoriteItems, FavoriteItem} from './favorite/FavoriteItem'
+import {Message, Room, Account} from './message/message'
 
 import starHeader from '../images/star_header.png'
 import favStar from '../images/star.png'
+import {mentionSidebarId} from "./mention_list/mention_list";
 
 const rootWrapperSelector = 'currentselectedroom'
 const roomHeaderSelector = '#_roomHeader .chatRoomHeader__titleContainer'
 const headerParentSelector = '#_adminNavi'
 const sidebarParentSelector = '#_mainContent'
 
-const sidebarId = 'extensionFavorite'
+export const favoriteSidebarId = 'extensionFavorite'
 
 class Favorite {
     constructor() {
@@ -32,7 +34,7 @@ class Favorite {
         const buttonImage = document.createElement('img')
         // buttonImage.src = '/images/star.png';
         buttonImage.src = starHeader
-        buttonImage.classList = ['globalHeaderPlatform__icon']
+        buttonImage.classList = ['chatworkCompletionFavoriteHeaderButtonImage']
         // Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">
 
         const buttonContent = document.createElement('span')
@@ -51,11 +53,13 @@ class Favorite {
     }
 
     headerClickListener() {
-        const container = document.querySelector(`#${sidebarId}`)
+        const container = document.querySelector(`#${favoriteSidebarId}`)
         if (container.style.display === 'block') {
             container.style.display = 'none'
         } else {
             container.style.display = 'block'
+            // hide mention view... need to unsubscribe
+            // document.querySelector(`#${mentionSidebarId}`).style.display = 'none'
         }
     }
 
@@ -65,7 +69,7 @@ class Favorite {
         parent.appendChild(favoriteItems)
 
         // set click handler to action buttons
-        parent.querySelector(`#${sidebarId}`)
+        parent.querySelector(`#${favoriteSidebarId}`)
             .addEventListener('click', (event) => {
                 const clickElement = parent.querySelector('button.chatworkCompletionFavoriteListItemActionButton:hover')
                 if (clickElement) {
@@ -84,7 +88,7 @@ class Favorite {
      */
     createSidebarElement(items) {
         const aside = document.createElement('aside')
-        aside.id = sidebarId
+        aside.id = favoriteSidebarId
         aside.classList.add('chatworkCompletionFavorite')
 
         const header = document.createElement('header')
@@ -186,7 +190,7 @@ class Favorite {
         const favoriteItem = new FavoriteItem(
             new Message(messageId, message, date),
             new Room(roomId, roomName, roomIcon),
-            new Speaker(speakerName, speakerIcon),
+            new Account(speakerName, speakerIcon),
             Date.now())
         this.favoriteItems.set(favoriteItem)
 
