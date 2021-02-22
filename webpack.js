@@ -6,7 +6,6 @@ module.exports = {
     entry: {
         index: './app/scripts/app.js',
         embed: './app/scripts/embed/embed.js',
-        test: './test/test.js'
     },
     plugins: [
         new CleanWebpackPlugin(['app/dist']),
