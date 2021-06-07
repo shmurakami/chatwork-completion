@@ -21,7 +21,6 @@ const sidebarParentSelector = '#_mainContent'
 import reload from '../../images/refresh.svg'
 import settings from '../../images/settings.svg'
 import {Account, Message, MessageDate, Room} from "../message/message";
-import {favoriteSidebarId} from "../favorite";
 import {AuthenticationClient} from "../client/AuthenticationClient";
 import {MentionSubscribeClient} from "../client/MentionSubscribeClient";
 import {MentionListClient} from "../client/MentionListClient";
@@ -75,9 +74,6 @@ export class MentionList {
             this.unsubscribe();
         } else {
             container.style.display = 'block'
-            // hide fav view
-            document.querySelector(`#${favoriteSidebarId}`).style.display = 'none'
-
             // subscribe only while this menu opens
             const credential = this.retrieveCredential()
             if (credential) {
