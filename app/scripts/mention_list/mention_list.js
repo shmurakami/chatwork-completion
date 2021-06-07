@@ -15,7 +15,7 @@
 import {elementReady} from "../element_ready";
 import {MentionMessage} from "./mention_message";
 
-const headerParentSelector = '#_adminNavi'
+const parentSelector = '#sidebarSwitch > div'
 const sidebarParentSelector = '#_mainContent'
 
 import reload from '../../images/refresh.svg'
@@ -37,37 +37,33 @@ export class MentionList {
     }
 
     addMenu() {
-        const parent = document.querySelector(headerParentSelector)
-        const button = this.createButtonElement()
+        const parent = document.querySelector(parentSelector)
+        const styleSourceElement = parent.querySelectorAll('button')[1]
+        const button = this.createButtonElement(styleSourceElement)
 
         button.addEventListener('click', () => {
-            this.headerClickListener()
+            this.menuClickListener()
         })
 
         parent.appendChild(button)
     }
 
-    createButtonElement() {
-        const buttonImage = document.createElement('span')
-        buttonImage.textContent = '@'
-        buttonImage.classList = ['globalHeaderPlatform__icon']
+    createButtonElement(source) {
+        const buttonImage = document.createElement('button');
+        buttonImage.classList = source.classList;
+        buttonImage.classList.add('chatworkCompletionMentionListMenu')
+        buttonImage.setAttribute('aria-label', 'Mention List');
 
-        const buttonContent = document.createElement('span')
-        buttonContent.classList.add('globalHeaderNavItem__button', 'chatworkCompletionMentionListHeaderButton')
+        const buttonTextElement = document.createElement('span');
+        buttonTextElement.classList = source.querySelector('span').classList;
+        buttonTextElement.classList.add('chatworkCompletionMentionListMenuButton');
+        buttonTextElement.textContent = '@';
 
-        const list = document.createElement('li')
-        list.setAttribute('role', 'button')
-        list.setAttribute('aria-label', 'Mention List')
-        list.id = 'extension_openMentionList'
-        list.classList.add('globalHeaderNavItem', '_showDescription')
-
-        buttonContent.appendChild(buttonImage)
-        list.appendChild(buttonContent)
-
-        return list
+        buttonImage.appendChild(buttonTextElement);
+        return buttonImage;
     }
 
-    headerClickListener() {
+    menuClickListener() {
         const container = document.querySelector(`#${mentionSidebarId}`)
         if (container.style.display === 'block') {
             container.style.display = 'none'
@@ -308,7 +304,7 @@ export class MentionList {
     }
 }
 
-elementReady(headerParentSelector)
+elementReady(parentSelector)
     .then(() => {
         const mentionList = new MentionList()
         mentionList.addMenu()

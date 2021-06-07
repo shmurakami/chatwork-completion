@@ -1,10 +1,12 @@
 @import "sidebar_module";
 
-.chatworkCompletionMentionListHeaderButton {
-  font-size: 24px;
-  line-height: 24px;
-  font-weight: 300;
-  display: block;
+.chatworkCompletionMentionListMenu {
+  border-left: none;
+
+  .chatworkCompletionMentionListMenuButton {
+    font-size: 18px;
+    line-height: 18px;
+  }
 }
 
 .chatworkCompletionMentionList {
