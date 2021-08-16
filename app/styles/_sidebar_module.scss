@@ -7,7 +7,7 @@
   height: calc(100% - 42px);
   border-left: 1px solid #12202F;
   background-color: #fff;
-  z-index: 10000;
+  z-index: 999;
 }
 
 @mixin sidebarContentsHeader {
@@ -20,7 +20,7 @@
 }
 
 @mixin sidebarContentsListContainer {
-  z-index: 10001;
+  z-index: 1000;
   list-style: none;
   height: calc(100% - 42px);
   overflow-y: auto;
